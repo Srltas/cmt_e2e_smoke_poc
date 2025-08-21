@@ -1,0 +1,76 @@
+package com.cmt.e2e.support;
+
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.Properties;
+
+import static org.assertj.core.api.Assertions.assertThat;
+
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.TestInfo;
+
+/**
+ * 모든 E2E 테스트가 상속받는 기본 클래스
+ * 골든 파일 비교, 테스트별 작업 디렉터리 생성 등 공통 기능 제공
+ */
+public abstract class CmtE2eTestBase {
+
+    protected TestPaths testPaths;
+    protected AnswerAsserter answerAsserter;
+    protected File cmtConsoleWorkDir;
+    protected ProcessRunner runner;
+    protected WorkspaceFixtures workspaceFixtures;
+
+    @BeforeEach
+    void setup(TestInfo testInfo) throws IOException {
+        this.testPaths = new TestPaths(testInfo);
+        this.answerAsserter = new AnswerAsserter(testPaths);
+
+        String cmtConsoleHome = resolveCmtConsoleHome();
+
+        assertThat(cmtConsoleHome).withFailMessage("CMT_CONSOLE_HOME 환경 변수가 설정되지 않았습니다.")
+            .isNotNull()
+            .isNotEmpty();
+        this.cmtConsoleWorkDir = new File(cmtConsoleHome);
+        this.runner = new ProcessRunner(this.cmtConsoleWorkDir);
+
+        this.workspaceFixtures = new WorkspaceFixtures(this.cmtConsoleWorkDir, testInfo);
+        // @CubridDemodbMh 어노테이션이 있다면 .mh 파일을 자동으로 준비
+        this.workspaceFixtures.setupCubridDemodbMh();
+    }
+
+    @AfterEach
+    void cleanup() throws IOException {
+        this.workspaceFixtures.cleanupWorkspace();
+        this.workspaceFixtures.cleanupConf();
+    }
+
+    private String resolveCmtConsoleHome() throws IOException {
+        // 1. 환경 변수 우선 확인
+        String homePath = System.getenv("CMT_CONSOLE_HOME");
+        if (homePath != null && !homePath.isBlank()) {
+            System.out.println("Using CMT_CONSOLE_HOME from environment variable: " + homePath);
+            return homePath;
+        }
+
+        // 2. e2e-test.properties 파일 확인
+        Path propsPath = Paths.get("e2e-test.properties");
+        if (Files.exists(propsPath)) {
+            Properties props = new Properties();
+            try (InputStream input = Files.newInputStream(propsPath)) {
+                props.load(input);
+                homePath = props.getProperty("cmt.console.home");
+                if (homePath != null && !homePath.isBlank()) {
+                    System.out.println("Using cmt.console.home form e2e-test.properties: " + homePath);
+                    return homePath;
+                }
+            }
+        }
+        return null;
+    }
+}
