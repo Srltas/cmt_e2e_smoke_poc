@@ -16,7 +16,7 @@ import org.junit.jupiter.api.TestInfo;
 
 public class WorkspaceFixtures {
 
-    public static final String CUBRID_DEMODB_MH = "1755661922744.mh";
+    public static final String CUBRID_DEMODB_MH = "1758883298370.mh";
 
     private final Path cmtConsoleDir;
     private final Path workspaceReportDir;
