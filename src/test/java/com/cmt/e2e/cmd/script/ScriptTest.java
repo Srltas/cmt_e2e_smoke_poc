@@ -1,13 +1,14 @@
 package com.cmt.e2e.cmd.script;
 
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
+import static com.cmt.e2e.support.Drivers.DB.CUBRID;
 import static org.xmlunit.assertj.XmlAssert.assertThat;
 
 import com.cmt.e2e.support.CmtE2eTestBase;
+import com.cmt.e2e.support.Drivers;
 import com.cmt.e2e.support.Scrubbers;
 import com.cmt.e2e.support.annotation.TestResources;
 import com.cmt.e2e.support.containers.CubridDemodbContainer;
@@ -23,7 +24,10 @@ public class ScriptTest extends CmtE2eTestBase {
     @TestResources("script")
     void cubridDemodb() throws IOException, InterruptedException {
         Path resourceDbConf = testPaths.getResourceDir().resolve("db.conf");
-        CubridDemodbContainer.patchDbConf(resourceDbConf);
+
+        CubridDemodbContainer.patchDbConfHost(resourceDbConf, "cubrid_source");
+        CubridDemodbContainer.patchDbConfPort(resourceDbConf, "cubrid_source");
+        CubridDemodbContainer.patchDbConfDriver(resourceDbConf, "cubrid_source", Drivers.latest(CUBRID));
 
         workspaceFixtures.copyConfToWorkspace(resourceDbConf);
 
