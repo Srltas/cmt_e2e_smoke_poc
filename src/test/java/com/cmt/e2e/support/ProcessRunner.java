@@ -145,6 +145,9 @@ public class ProcessRunner {
      * @throws InterruptedException
      */
     public ProcessResult run(String[] command, long timeoutSeconds) throws IOException, InterruptedException {
+        System.out.println("[RUN] cwd=" + workDir.getAbsolutePath());
+        System.out.println("[RUN] cmd=" + String.join(" ", command));
+
         ProcessBuilder processBuilder = new ProcessBuilder(command);
         processBuilder.redirectErrorStream(true);
 

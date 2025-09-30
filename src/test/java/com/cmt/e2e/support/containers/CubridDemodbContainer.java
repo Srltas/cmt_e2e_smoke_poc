@@ -91,5 +91,6 @@ public class CubridDemodbContainer {
             lines.add(key + "=" + value);
         }
         Files.write(conf, lines, StandardCharsets.UTF_8);
+        System.out.println("[DBCONF] " + key + "=" + value);
     }
 }
