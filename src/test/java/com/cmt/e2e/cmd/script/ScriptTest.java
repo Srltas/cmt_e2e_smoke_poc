@@ -30,6 +30,7 @@ public class ScriptTest extends CmtE2eTestBase {
         CubridDemodbContainer.patchDbConfHost(resourceDbConf, "cubrid_source");
         CubridDemodbContainer.patchDbConfPort(resourceDbConf, "cubrid_source");
         CubridDemodbContainer.patchDbConfDriver(resourceDbConf, "cubrid_source", Drivers.latest(CUBRID));
+        CubridDemodbContainer.patchDbConfOutput(resourceDbConf, "file_target", testPaths.artifactDir);
 
         System.out.println("[RUNNER] workDir=" + cmtConsoleWorkDir.getPath());
         workspaceFixtures.copyConfToWorkspace(resourceDbConf);

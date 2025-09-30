@@ -72,6 +72,12 @@ public class CubridDemodbContainer {
         upsertProperty(conf, prefix + ".driver", driverJar.toAbsolutePath().toString());
     }
 
+    /** file output 절대경로 주입 */
+    public static void patchDbConfOutput(Path conf, String prefix, Path outDir) throws IOException {
+        Files.createDirectories(outDir);
+        upsertProperty(conf, prefix + ".output", outDir.toAbsolutePath().resolve("output").toString());
+    }
+
     private static void upsertProperty(Path conf, String key, String value) throws IOException {
         if (!Files.exists(conf)) {
             throw new FileNotFoundException("db.conf not found: " + conf);
