@@ -25,12 +25,10 @@ public class CubridDemodbContainer {
     @Container
     public static final GenericContainer<?> CUBRID =
         new GenericContainer<>(IMAGE)
+            .withPrivilegedMode(true)
+            .withEnv("CUBRID_DB", "demodb")
+            .withEnv("CUBRID_LOCALE", "ko_KR")
             .withExposedPorts(33000)
-            .withCommand("bash", "-lc",
-                "set -eux;" + "cubrid service start;" +
-                "cubrid server start demodb;" +
-                "cubrid broker start;" +
-                "tail -f /dev/null")
             .waitingFor(Wait.forListeningPort())
             .withStartupTimeout(Duration.ofMinutes(2));
 
@@ -76,6 +74,40 @@ public class CubridDemodbContainer {
     public static void patchDbConfOutput(Path conf, String prefix, Path outDir) throws IOException {
         Files.createDirectories(outDir);
         upsertProperty(conf, prefix + ".output", outDir.toAbsolutePath().resolve("output").toString());
+    }
+
+    public static void waitUntilReady() {
+        ensureUp();
+        long deadline = System.currentTimeMillis() + 120_000;
+        while (System.currentTimeMillis() < deadline) {
+            try {
+                var r = CUBRID.execInContainer("bash", "-lc", "cubrid server status || true");
+                String out = r.getStdout() + r.getStderr();
+                if (out.toLowerCase().contains("server demodb")) return;
+            } catch (Exception e) {
+                dumpDiagnostics();
+                throw new IllegalStateException("demodb did not become ready in time");
+            }
+        }
+    }
+
+    public static void dumpDiagnostics() {
+        try {
+            System.out.println("=== CUBRID STATUS ===");
+            System.out.println(CUBRID.execInContainer("bash","-lc","cubrid_rel").getStdout());
+            System.out.println(CUBRID.execInContainer("bash","-lc","cubrid server status").getStdout());
+            System.out.println(CUBRID.execInContainer("bash","-lc","cubrid broker status").getStdout());
+
+            System.out.println("=== CONFIG ===");
+            System.out.println(CUBRID.execInContainer("bash","-lc","cat $CUBRID/conf/cubrid.conf").getStdout());
+            System.out.println(CUBRID.execInContainer("bash","-lc","cat $CUBRID/conf/cubrid_broker.conf").getStdout());
+
+            System.out.println("=== BROKER LOGS ===");
+            System.out.println(CUBRID.execInContainer("bash","-lc","ls -l $CUBRID/log/broker/error_log || true").getStdout());
+            System.out.println(CUBRID.execInContainer("bash","-lc","tail -n 200 $CUBRID/log/broker/error_log/broker1_1.err 2>/dev/null || true").getStdout());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private static void upsertProperty(Path conf, String key, String value) throws IOException {

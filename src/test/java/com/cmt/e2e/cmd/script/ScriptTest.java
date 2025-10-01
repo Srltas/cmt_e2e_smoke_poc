@@ -37,6 +37,8 @@ public class ScriptTest extends CmtE2eTestBase {
     void cubridDemodb() throws IOException, InterruptedException {
         Path resourceDbConf = testPaths.getResourceDir().resolve("db.conf");
 
+        CubridDemodbContainer.waitUntilReady();
+
         CubridDemodbContainer.patchDbConfHost(resourceDbConf, "cubrid_source");
         CubridDemodbContainer.patchDbConfPort(resourceDbConf, "cubrid_source");
         CubridDemodbContainer.patchDbConfDriver(resourceDbConf, "cubrid_source", Drivers.latest(CUBRID));
