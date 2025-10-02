@@ -20,14 +20,13 @@ import org.testcontainers.utility.DockerImageName;
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class CubridDemodbContainer {
 
-    private static final DockerImageName IMAGE = DockerImageName.parse("cubrid/cubrid:11.4");
+    private static final DockerImageName IMAGE = DockerImageName.parse("cubriddmkim/cubrid_demodb:11.4");
 
     @Container
     public static final GenericContainer<?> CUBRID =
         new GenericContainer<>(IMAGE)
             .withPrivilegedMode(true)
-            .withEnv("CUBRID_DB", "demodb")
-            .withEnv("CUBRID_LOCALE", "ko_KR")
+            .withEnv("CUBRID_COMPONENTS", "DEMO")
             .withExposedPorts(33000)
             .waitingFor(Wait.forListeningPort())
             .withStartupTimeout(Duration.ofMinutes(2));
