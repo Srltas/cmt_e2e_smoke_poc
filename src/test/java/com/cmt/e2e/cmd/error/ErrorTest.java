@@ -21,6 +21,6 @@ public class ErrorTest extends CmtE2eTestBase {
         ProcessResult result = runner.run(command);
 
         // 3. Assert
-        answerAsserter.assertAnswerFile(result.output(), "unknownCommand.answer");
+        answerAsserter.assertTextWithAnswerFile(result.output(), "unknownCommand.answer");
     }
 }

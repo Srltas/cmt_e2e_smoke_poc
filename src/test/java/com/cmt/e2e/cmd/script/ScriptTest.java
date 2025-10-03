@@ -14,7 +14,6 @@ import java.util.List;
 import java.util.Properties;
 
 import static com.cmt.e2e.support.Drivers.DB.CUBRID;
-import static com.cmt.e2e.support.XmlUtil.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import com.cmt.e2e.support.CmtE2eTestBase;
@@ -78,9 +77,7 @@ public class ScriptTest extends CmtE2eTestBase {
             .orElseThrow(() -> new AssertionError("Generated script file not found in " + tempDir));
 
         String actualXml = Files.readString(generatedScriptFile);
-        String expectedXml = Files.readString(testPaths.getResourceDir().resolve("script.answer"));
-
-        assertSimilarStandard(actualXml, expectedXml);
+        answerAsserter.assertScriptXmlWithAnswerFile(actualXml, "script.answer");
     }
 
     static final class JdbcTry {

@@ -18,6 +18,6 @@ public class LogTest extends CmtE2eTestBase {
 
         ProcessResult result = runner.log(options);
 
-        answerAsserter.assertAnswerFile(result.output(), "expected.answer");
+        answerAsserter.assertTextWithAnswerFile(result.output(), "expected.answer");
     }
 }

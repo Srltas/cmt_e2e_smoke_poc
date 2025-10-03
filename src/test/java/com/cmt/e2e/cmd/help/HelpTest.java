@@ -18,6 +18,6 @@ public class HelpTest extends CmtE2eTestBase {
 
         ProcessResult result = runner.run(command);
 
-        answerAsserter.assertAnswerFile(result.output(), "commandHelp.answer");
+        answerAsserter.assertTextWithAnswerFile(result.output(), "commandHelp.answer");
     }
 }

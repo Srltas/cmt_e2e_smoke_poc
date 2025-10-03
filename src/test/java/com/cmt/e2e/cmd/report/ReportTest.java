@@ -22,7 +22,7 @@ public class ReportTest extends CmtE2eTestBase {
 
         ProcessResult result = runner.report(options);
 
-        answerAsserter.assertAnswerFile(result.output(), "report_ao.answer");
+        answerAsserter.assertTextWithAnswerFile(result.output(), "report_ao.answer");
     }
 
     @Test
@@ -34,6 +34,6 @@ public class ReportTest extends CmtE2eTestBase {
 
         ProcessResult result = runner.report(options);
 
-        answerAsserter.assertAnswerFile(result.output(), "report_ao_l.answer");
+        answerAsserter.assertTextWithAnswerFile(result.output(), "report_ao_l.answer");
     }
 }
