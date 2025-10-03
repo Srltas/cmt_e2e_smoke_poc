@@ -14,16 +14,13 @@ import java.util.List;
 import java.util.Properties;
 
 import static com.cmt.e2e.support.Drivers.DB.CUBRID;
+import static com.cmt.e2e.support.XmlUtil.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.xmlunit.assertj.XmlAssert.assertThat;
 
 import com.cmt.e2e.support.CmtE2eTestBase;
 import com.cmt.e2e.support.Drivers;
-import com.cmt.e2e.support.ProcessResult;
-import com.cmt.e2e.support.Scrubbers;
 import com.cmt.e2e.support.annotation.TestResources;
 import com.cmt.e2e.support.containers.CubridDemodbContainer;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
@@ -83,9 +80,7 @@ public class ScriptTest extends CmtE2eTestBase {
         String actualXml = Files.readString(generatedScriptFile);
         String expectedXml = Files.readString(testPaths.getResourceDir().resolve("script.answer"));
 
-        assertThat(Scrubbers.scrubXml(actualXml))
-            .and(Scrubbers.scrubXml(expectedXml))
-            .ignoreWhitespace().areSimilar();
+        assertSimilarStandard(actualXml, expectedXml);
     }
 
     static final class JdbcTry {
