@@ -10,6 +10,8 @@ import java.util.Properties;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import com.cmt.e2e.assertion.Verifier;
+import com.cmt.e2e.runner.CommandRunner;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.TestInfo;
@@ -21,15 +23,15 @@ import org.junit.jupiter.api.TestInfo;
 public abstract class CmtE2eTestBase {
 
     protected TestPaths testPaths;
-    protected AnswerAsserter answerAsserter;
+    protected Verifier verifier;
     protected File cmtConsoleWorkDir;
-    protected ProcessRunner runner;
+    protected CommandRunner commandRunner;
     protected WorkspaceFixtures workspaceFixtures;
 
     @BeforeEach
     void setup(TestInfo testInfo) throws IOException {
         this.testPaths = new TestPaths(testInfo);
-        this.answerAsserter = new AnswerAsserter(testPaths);
+        this.verifier = new Verifier(testPaths);
 
         String cmtConsoleHome = resolveCmtConsoleHome();
 
@@ -37,7 +39,7 @@ public abstract class CmtE2eTestBase {
             .isNotNull()
             .isNotEmpty();
         this.cmtConsoleWorkDir = new File(cmtConsoleHome);
-        this.runner = new ProcessRunner(this.cmtConsoleWorkDir);
+        this.commandRunner = new CommandRunner(this.cmtConsoleWorkDir);
 
         this.workspaceFixtures = new WorkspaceFixtures(this.cmtConsoleWorkDir, testInfo);
         // @CubridDemodbMh 어노테이션이 있다면 .mh 파일을 자동으로 준비

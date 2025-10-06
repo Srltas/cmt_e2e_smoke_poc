@@ -2,8 +2,11 @@ package com.cmt.e2e.cmd.help;
 
 import java.io.IOException;
 
+import com.cmt.e2e.assertion.strategies.PlainTextVerificationStrategy;
+import com.cmt.e2e.command.Command;
+import com.cmt.e2e.command.CommandResult;
+import com.cmt.e2e.command.migration.HelpCommand;
 import com.cmt.e2e.support.CmtE2eTestBase;
-import com.cmt.e2e.support.ProcessResult;
 import com.cmt.e2e.support.annotation.TestResources;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -14,10 +17,10 @@ public class HelpTest extends CmtE2eTestBase {
     @TestResources("help/command")
     @DisplayName("명령어 help 확인")
     void commandHelp() throws IOException, InterruptedException {
-        String[] command = {"./migration.sh"};
+        Command helpCommand = new HelpCommand();
 
-        ProcessResult result = runner.run(command);
+        CommandResult result = commandRunner.run(helpCommand);
 
-        answerAsserter.assertTextWithAnswerFile(result.output(), "commandHelp.answer");
+        verifier.verifyWith(result, "commandHelp.answer", new PlainTextVerificationStrategy());
     }
 }

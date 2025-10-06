@@ -1,23 +1,30 @@
 package com.cmt.e2e.cmd.log;
 
-import java.nio.file.Path;
+import static com.cmt.e2e.support.WorkspaceFixtures.CUBRID_DEMODB_MH;
 
+import com.cmt.e2e.assertion.strategies.PlainTextVerificationStrategy;
+import com.cmt.e2e.command.CommandResult;
+import com.cmt.e2e.command.migration.LogCommand;
 import com.cmt.e2e.support.CmtE2eTestBase;
-import com.cmt.e2e.support.ProcessResult;
+import com.cmt.e2e.support.annotation.CubridDemodbMh;
 import com.cmt.e2e.support.annotation.TestResources;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 
 public class LogTest extends CmtE2eTestBase {
 
-    // Console을 System.in으로 변경해야 사용 가능
+    @Test
+    @CubridDemodbMh
     @TestResources("log/ps_20")
+    @DisplayName("log 명령어 -ps 옵션 mh 지정")
     void testLogPaging() throws Exception {
-        Path mhPath = testPaths.getResourceDir().resolve("1755661922744.mh");
-        workspaceFixtures.copyResourceToWorkspace(mhPath);
+        LogCommand logCommand = LogCommand.builder()
+            .pageSize(20)
+            .mhFile(CUBRID_DEMODB_MH)
+            .build();
 
-        String[] options = {"-ps", "20", mhPath.getFileName().toString()};
+        CommandResult result = commandRunner.runInteractive(logCommand);
 
-        ProcessResult result = runner.log(options);
-
-        answerAsserter.assertTextWithAnswerFile(result.output(), "expected.answer");
+        verifier.verifyWith(result, "expected.answer", new PlainTextVerificationStrategy());
     }
 }

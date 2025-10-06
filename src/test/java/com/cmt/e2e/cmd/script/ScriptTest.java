@@ -16,6 +16,9 @@ import java.util.Properties;
 import static com.cmt.e2e.support.Drivers.DB.CUBRID;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import com.cmt.e2e.assertion.strategies.XmlVerificationStrategy;
+import com.cmt.e2e.command.CommandResult;
+import com.cmt.e2e.command.migration.ScriptCommand;
 import com.cmt.e2e.support.CmtE2eTestBase;
 import com.cmt.e2e.support.Drivers;
 import com.cmt.e2e.support.annotation.TestResources;
@@ -66,8 +69,14 @@ public class ScriptTest extends CmtE2eTestBase {
         Path driverJar = Drivers.latest(CUBRID);
         jdbcPreflight(driverJar, host, port, dbname, user, pass, charset);
 
-        String[] options = {"-s", "cubrid_source", "-t", "file_target", "-o", tempDir.toString()};
-        var result = runner.script(options);
+        ScriptCommand command = ScriptCommand.builder()
+            .source("cubrid_source")
+            .target("file_target")
+            .output(tempDir.toString())
+            .build();
+
+        CommandResult result = commandRunner.run(command);
+
         System.out.printf("[RUN-RESULT] exit=%d, timedOut=%s%n%s%n",
             result.exitCode(), result.timedOut(), result.output());
         assertEquals(0, result.exitCode(), "script failed");
@@ -77,7 +86,8 @@ public class ScriptTest extends CmtE2eTestBase {
             .orElseThrow(() -> new AssertionError("Generated script file not found in " + tempDir));
 
         String actualXml = Files.readString(generatedScriptFile);
-        answerAsserter.assertScriptXmlWithAnswerFile(actualXml, "script.answer");
+        CommandResult verificationResult = new CommandResult(actualXml, result.exitCode(), result.timedOut());
+        verifier.verifyWith(verificationResult, "script.answer", new XmlVerificationStrategy());
     }
 
     static final class JdbcTry {

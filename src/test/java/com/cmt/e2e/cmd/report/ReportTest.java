@@ -4,8 +4,10 @@ import java.io.IOException;
 
 import static com.cmt.e2e.support.WorkspaceFixtures.CUBRID_DEMODB_MH;
 
+import com.cmt.e2e.assertion.strategies.PlainTextVerificationStrategy;
+import com.cmt.e2e.command.migration.ReportCommand;
 import com.cmt.e2e.support.CmtE2eTestBase;
-import com.cmt.e2e.support.ProcessResult;
+import com.cmt.e2e.command.CommandResult;
 import com.cmt.e2e.support.annotation.CubridDemodbMh;
 import com.cmt.e2e.support.annotation.TestResources;
 import org.junit.jupiter.api.DisplayName;
@@ -18,11 +20,14 @@ public class ReportTest extends CmtE2eTestBase {
     @TestResources("report/ao")
     @DisplayName("report 명령어 -ao 옵션 mh 지정")
     void report_ao() throws IOException, InterruptedException {
-        String[] options = {"-ao", CUBRID_DEMODB_MH};
+        ReportCommand command = ReportCommand.builder()
+            .allOutput()
+            .mhFile(CUBRID_DEMODB_MH)
+            .build();
 
-        ProcessResult result = runner.report(options);
+        CommandResult result = commandRunner.run(command);
 
-        answerAsserter.assertTextWithAnswerFile(result.output(), "report_ao.answer");
+        verifier.verifyWith(result, "report_ao.answer", new PlainTextVerificationStrategy());
     }
 
     @Test
@@ -30,10 +35,14 @@ public class ReportTest extends CmtE2eTestBase {
     @TestResources("report/ao_l")
     @DisplayName("report 명령어 -ao, -l 옵션")
     void report_ao_l() throws IOException, InterruptedException {
-        String[] options = {"-ao", "-l", CUBRID_DEMODB_MH};
+        ReportCommand command = ReportCommand.builder()
+            .allOutput()
+            .latest()
+            .mhFile(CUBRID_DEMODB_MH)
+            .build();
 
-        ProcessResult result = runner.report(options);
+        CommandResult result = commandRunner.run(command);
 
-        answerAsserter.assertTextWithAnswerFile(result.output(), "report_ao_l.answer");
+        verifier.verifyWith(result, "report_ao_l.answer", new PlainTextVerificationStrategy());
     }
 }
