@@ -1,93 +1,24 @@
 Thank you for using CUBRID Migration Toolkit(CMT) Console.
 
-Reading migration history file: <1755661922744.mh>
+Reading migration history file: <1758883298370.mh>
 
-2025-08-20 12:52:02.991 Migration started at 2025-08-20 12:52:02
-2025-08-20 12:52:03.689 Create table[PUBLIC.athlete] successfully.
-2025-08-20 12:52:03.696 Create table[PUBLIC.code] successfully.
-2025-08-20 12:52:03.703 Create table[PUBLIC.event] successfully.
-2025-08-20 12:52:03.710 Create table[PUBLIC.game] successfully.
-2025-08-20 12:52:03.718 Create table[PUBLIC.history] successfully.
-2025-08-20 12:52:03.725 Create table[PUBLIC.nation] successfully.
-2025-08-20 12:52:03.732 Create table[PUBLIC.olympic] successfully.
-2025-08-20 12:52:03.739 Create table[PUBLIC.participant] successfully.
-2025-08-20 12:52:03.746 Create table[PUBLIC.record] successfully.
-2025-08-20 12:52:03.753 Create table[PUBLIC.stadium] successfully.
-2025-08-20 12:52:04.725 Create sequence[event_no] successfully.
-2025-08-20 12:52:04.752 Create sequence[stadium_no] successfully.
-2025-08-20 12:52:05.785 Begin to export records of table[athlete].
-2025-08-20 12:52:05.786 Begin to export records of table[event].
-2025-08-20 12:52:05.786 Begin to export records of table[code].
-2025-08-20 12:52:05.787 Begin to export records of table[game].
-2025-08-20 12:52:05.837 Exported 6 records from table [code] successfully.
-2025-08-20 12:52:05.844 Exported 422 records from table [event] successfully.
-2025-08-20 12:52:05.853 Exported 1000 records from table [athlete] successfully.
-2025-08-20 12:52:05.861 Exported 1000 records from table [game] successfully.
-2025-08-20 12:52:05.877 Begin to export records of table[history].
-2025-08-20 12:52:05.877 Begin to export records of table[nation].
-2025-08-20 12:52:05.885 Imported 6 records from [code] to table [code] successfully.
-2025-08-20 12:52:05.886 Exported 1000 records from table [athlete] successfully.
-2025-08-20 12:52:05.894 Exported 1000 records from table [game] successfully.
-2025-08-20 12:52:05.895 Exported 215 records from table [nation] successfully.
-2025-08-20 12:52:05.903 Exported 147 records from table [history] successfully.
-2025-08-20 12:52:05.907 Imported 1000 records from [athlete] to table [athlete] successfully.
-2025-08-20 12:52:05.916 Exported 1000 records from table [athlete] successfully.
-2025-08-20 12:52:05.924 Imported 422 records from [event] to table [event] successfully.
-2025-08-20 12:52:05.933 Exported 1000 records from table [game] successfully.
-2025-08-20 12:52:05.941 Imported 215 records from [nation] to table [nation] successfully.
-2025-08-20 12:52:05.943 Exported 1000 records from table [athlete] successfully.
-2025-08-20 12:52:05.956 Imported 1000 records from [athlete] to table [athlete] successfully.
-2025-08-20 12:52:05.967 Exported 1000 records from table [game] successfully.
-2025-08-20 12:52:05.968 Imported 147 records from [history] to table [history] successfully.
-2025-08-20 12:52:05.974 Begin to export records of table[participant].
-2025-08-20 12:52:05.974 Begin to export records of table[olympic].
-2025-08-20 12:52:05.974 Exported 1000 records from table [athlete] successfully.
-2025-08-20 12:52:05.982 Imported 1000 records from [game] to table [game] successfully.
-2025-08-20 12:52:05.993 Imported 1000 records from [athlete] to table [athlete] successfully.
-2025-08-20 12:52:05.994 Exported 25 records from table [olympic] successfully.
-2025-08-20 12:52:06.001 Exported 1000 records from table [game] successfully.
-2025-08-20 12:52:06.002 Exported 1000 records from table [athlete] successfully.
-2025-08-20 12:52:06.009 Imported 1000 records from [game] to table [game] successfully.
-2025-08-20 12:52:06.014 Exported 916 records from table [participant] successfully.
-2025-08-20 12:52:06.025 Begin to export records of table[record].
-2025-08-20 12:52:06.026 Imported 1000 records from [athlete] to table [athlete] successfully.
+2025-09-26 19:41:38.443 Migration started at 2025-09-26 19:41:38
+2025-09-26 19:41:38.488 Create table[PUBLIC.athlete] successfully.
+2025-09-26 19:41:38.489 Create table[PUBLIC.code] successfully.
+2025-09-26 19:41:38.490 Create table[PUBLIC.event] successfully.
+2025-09-26 19:41:38.491 Create table[PUBLIC.game] successfully.
+2025-09-26 19:41:38.492 Create table[PUBLIC.history] successfully.
+2025-09-26 19:41:38.493 Create table[PUBLIC.nation] successfully.
+2025-09-26 19:41:38.494 Create table[PUBLIC.olympic] successfully.
+2025-09-26 19:41:38.495 Create table[PUBLIC.participant] successfully.
+2025-09-26 19:41:38.495 Create table[PUBLIC.record] successfully.
+2025-09-26 19:41:38.496 Create table[PUBLIC.stadium] successfully.
+2025-09-26 19:41:39.501 Create sequence[event_no] successfully.
+2025-09-26 19:41:39.505 Create sequence[stadium_no] successfully.
+2025-09-26 19:41:40.516 Begin to export records of table[code].
+2025-09-26 19:41:40.517 Begin to export records of table[game].
+2025-09-26 19:41:40.518 Begin to export records of table[athlete].
+2025-09-26 19:41:40.518 Begin to export records of table[event].
+2025-09-26 19:41:40.521 Exported 6 records from table [code] successfully.
+2025-09-26 19:41:40.524 Begin to export records of table[history].
 <Press [enter] to continue...>
-2025-08-20 12:52:06.028 Exported 677 records from table [athlete] successfully.
-2025-08-20 12:52:06.040 Begin to export records of table[stadium].
-2025-08-20 12:52:06.042 Exported 1000 records from table [game] successfully.
-2025-08-20 12:52:06.042 Imported 1000 records from [game] to table [game] successfully.
-2025-08-20 12:52:06.054 Imported 1000 records from [athlete] to table [athlete] successfully.
-2025-08-20 12:52:06.063 Exported 141 records from table [stadium] successfully.
-2025-08-20 12:52:06.065 Exported 1000 records from table [record] successfully.
-2025-08-20 12:52:06.069 Imported 1000 records from [game] to table [game] successfully.
-2025-08-20 12:52:06.074 Exported 1000 records from table [game] successfully.
-2025-08-20 12:52:06.090 Imported 25 records from [olympic] to table [olympic] successfully.
-2025-08-20 12:52:06.099 Exported 1000 records from table [record] successfully.
-2025-08-20 12:52:06.104 Imported 1000 records from [athlete] to table [athlete] successfully.
-2025-08-20 12:52:06.123 Imported 916 records from [participant] to table [participant] successfully.
-2025-08-20 12:52:06.125 Exported 1000 records from table [game] successfully.
-2025-08-20 12:52:06.136 Imported 677 records from [athlete] to table [athlete] successfully.
-2025-08-20 12:52:06.152 Exported 653 records from table [game] successfully.
-2025-08-20 12:52:06.173 Imported 1000 records from [game] to table [game] successfully.
-2025-08-20 12:52:06.184 Imported 141 records from [stadium] to table [stadium] successfully.
-2025-08-20 12:52:06.199 Imported 1000 records from [record] to table [record] successfully.
-2025-08-20 12:52:06.214 Imported 1000 records from [game] to table [game] successfully.
-2025-08-20 12:52:06.230 Imported 1000 records from [record] to table [record] successfully.
-2025-08-20 12:52:06.244 Imported 1000 records from [game] to table [game] successfully.
-2025-08-20 12:52:06.255 Imported 1000 records from [game] to table [game] successfully.
-2025-08-20 12:52:06.268 Imported 653 records from [game] to table [game] successfully.
-2025-08-20 12:52:06.960 Create primary key[athlete] successfully.
-2025-08-20 12:52:06.968 Create primary key[code] successfully.
-2025-08-20 12:52:06.975 Create primary key[event] successfully.
-2025-08-20 12:52:06.982 Create primary key[game] successfully.
-2025-08-20 12:52:06.989 Create primary key[history] successfully.
-2025-08-20 12:52:06.997 Create primary key[nation] successfully.
-2025-08-20 12:52:07.004 Create primary key[olympic] successfully.
-2025-08-20 12:52:07.012 Create primary key[participant] successfully.
-2025-08-20 12:52:07.019 Create primary key[record] successfully.
-2025-08-20 12:52:07.026 Create primary key[stadium] successfully.
-2025-08-20 12:52:07.980 Create foreign key[fk_game_athlete_code] successfully.
-2025-08-20 12:52:07.987 Create foreign key[fk_game_event_code] successfully.
-2025-08-20 12:52:07.994 Create foreign key[fk_participant_nation_code] successfully.
-2025-08-20 12:52:08.002 Create foreign key[fk_participant_host_year] successfully.
-2025-08-20 12:52:08.978 Migration is finished.

@@ -23,7 +23,7 @@ public class LogTest extends CmtE2eTestBase {
             .mhFile(CUBRID_DEMODB_MH)
             .build();
 
-        CommandResult result = commandRunner.runInteractive(logCommand);
+        CommandResult result = commandRunner.run(logCommand);
 
         verifier.verifyWith(result, "expected.answer", new PlainTextVerificationStrategy());
     }
