@@ -9,14 +9,14 @@ import com.cmt.e2e.support.CmtE2eTestBase;
 import com.cmt.e2e.support.annotation.CubridDemodbMh;
 import com.cmt.e2e.support.annotation.TestResources;
 import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
 
 public class LogTest extends CmtE2eTestBase {
 
-    @Test
+    // System.console로 엔터 입력을 받고 있어 현재 테스트 자동화 불가능
+    //TODO: System.in으로 변경되면 테스트 코드 수정 필요
     @CubridDemodbMh
     @TestResources("log/ps_20")
-    @DisplayName("log 명령어 -ps 옵션 mh 지정")
+    @DisplayName("log 명령어 첫 페이지 출력 검증")
     void testLogPaging() throws Exception {
         LogCommand logCommand = LogCommand.builder()
             .pageSize(20)
