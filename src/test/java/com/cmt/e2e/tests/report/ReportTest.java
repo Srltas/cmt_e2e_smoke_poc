@@ -1,11 +1,11 @@
-package com.cmt.e2e.cmd.report;
+package com.cmt.e2e.tests.report;
 
 import java.io.IOException;
 
 import static com.cmt.e2e.support.WorkspaceFixtures.CUBRID_DEMODB_MH;
 
 import com.cmt.e2e.assertion.strategies.PlainTextVerificationStrategy;
-import com.cmt.e2e.command.migration.ReportCommand;
+import com.cmt.e2e.command.impls.ReportCommand;
 import com.cmt.e2e.support.CmtE2eTestBase;
 import com.cmt.e2e.command.CommandResult;
 import com.cmt.e2e.support.annotation.CubridDemodbMh;

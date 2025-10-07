@@ -1,4 +1,4 @@
-package com.cmt.e2e.cmd.script;
+package com.cmt.e2e.tests.script;
 
 import java.io.IOException;
 import java.net.InetAddress;
@@ -18,7 +18,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import com.cmt.e2e.assertion.strategies.XmlVerificationStrategy;
 import com.cmt.e2e.command.CommandResult;
-import com.cmt.e2e.command.migration.ScriptCommand;
+import com.cmt.e2e.command.impls.ScriptCommand;
 import com.cmt.e2e.support.CmtE2eTestBase;
 import com.cmt.e2e.support.Drivers;
 import com.cmt.e2e.support.annotation.TestResources;

@@ -1,10 +1,10 @@
-package com.cmt.e2e.cmd.log;
+package com.cmt.e2e.tests.log;
 
 import static com.cmt.e2e.support.WorkspaceFixtures.CUBRID_DEMODB_MH;
 
 import com.cmt.e2e.assertion.strategies.PlainTextVerificationStrategy;
 import com.cmt.e2e.command.CommandResult;
-import com.cmt.e2e.command.migration.LogCommand;
+import com.cmt.e2e.command.impls.LogCommand;
 import com.cmt.e2e.support.CmtE2eTestBase;
 import com.cmt.e2e.support.annotation.CubridDemodbMh;
 import com.cmt.e2e.support.annotation.TestResources;

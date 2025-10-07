@@ -1,7 +1,9 @@
-package com.cmt.e2e.command;
+package com.cmt.e2e.command.impls;
 
 import java.util.Arrays;
 import java.util.List;
+
+import com.cmt.e2e.command.Command;
 
 public class RawCommand implements Command {
 

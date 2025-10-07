@@ -12,7 +12,7 @@ import static java.util.concurrent.TimeUnit.SECONDS;
 
 import com.cmt.e2e.command.Command;
 import com.cmt.e2e.command.CommandResult;
-import com.cmt.e2e.command.migration.LogCommand;
+import com.cmt.e2e.command.impls.LogCommand;
 
 public class CommandRunner {
     private static final int DEFAULT_TIMEOUT_SECONDS = 300;

@@ -1,10 +1,12 @@
-package com.cmt.e2e.command.migration;
+package com.cmt.e2e.command.impls;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class ReportCommand extends MigrationCommand {
+import com.cmt.e2e.command.CmtCommand;
+
+public class ReportCommand extends CmtCommand {
 
     private final String mhFile;
 

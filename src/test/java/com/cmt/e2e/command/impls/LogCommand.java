@@ -1,8 +1,10 @@
-package com.cmt.e2e.command.migration;
+package com.cmt.e2e.command.impls;
 
 import java.util.*;
 
-public class LogCommand extends MigrationCommand {
+import com.cmt.e2e.command.CmtCommand;
+
+public class LogCommand extends CmtCommand {
 
     public static final Map<String, String> DEFAULT_RESPONDERS =
         Map.of("<Press \\[enter\\] to continue...>", "\n");

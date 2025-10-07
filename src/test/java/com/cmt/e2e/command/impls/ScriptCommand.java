@@ -1,10 +1,12 @@
-package com.cmt.e2e.command.migration;
+package com.cmt.e2e.command.impls;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class ScriptCommand extends MigrationCommand {
+import com.cmt.e2e.command.CmtCommand;
+
+public class ScriptCommand extends CmtCommand {
 
     private ScriptCommand(List<String> options) {
         super("script", options);

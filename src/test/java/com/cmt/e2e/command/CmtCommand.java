@@ -1,16 +1,14 @@
-package com.cmt.e2e.command.migration;
+package com.cmt.e2e.command;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import com.cmt.e2e.command.Command;
-
-public abstract class MigrationCommand implements Command {
+public abstract class CmtCommand implements Command {
     protected static final String MIGRATION_SHELL = "./migration.sh";
     protected final String subCommand;
     protected  final List<String> options;
 
-    public MigrationCommand(String subCommand, List<String> options) {
+    public CmtCommand(String subCommand, List<String> options) {
         this.subCommand = subCommand;
         this.options = options;
     }

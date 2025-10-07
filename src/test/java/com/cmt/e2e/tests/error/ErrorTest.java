@@ -1,11 +1,11 @@
-package com.cmt.e2e.cmd.error;
+package com.cmt.e2e.tests.error;
 
 import java.io.IOException;
 
 import com.cmt.e2e.assertion.strategies.PlainTextVerificationStrategy;
 import com.cmt.e2e.command.Command;
 import com.cmt.e2e.command.CommandResult;
-import com.cmt.e2e.command.RawCommand;
+import com.cmt.e2e.command.impls.RawCommand;
 import com.cmt.e2e.support.CmtE2eTestBase;
 import com.cmt.e2e.support.annotation.TestResources;
 import org.junit.jupiter.api.DisplayName;
