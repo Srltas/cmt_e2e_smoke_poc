@@ -2,6 +2,7 @@ package com.cmt.e2e.support;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.Socket;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Files;
@@ -11,7 +12,12 @@ import java.nio.file.StandardCopyOption;
 import java.util.Comparator;
 import java.util.Optional;
 
+import static com.cmt.e2e.support.Drivers.DB.CUBRID;
+
 import com.cmt.e2e.support.annotation.CubridDemodbMh;
+import com.cmt.e2e.support.containers.CubridDemodbContainer;
+import com.cmt.e2e.support.jdbc.CubridJdbcUrlStrategy;
+import com.cmt.e2e.support.jdbc.JdbcPreflight;
 import org.junit.jupiter.api.TestInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -100,5 +106,57 @@ public class WorkspaceFixtures {
                 .map(Path::toFile)
                 .forEach(File::delete);
         }
+    }
+
+    public void setupCubridDemodbAsSource(TestPaths testPaths) throws IOException, InterruptedException {
+        // 1. DB 컨테이너 준비
+        CubridDemodbContainer.waitUntilReady();
+
+        final String dbConfFileName = "db.conf";
+        final String cubridSourceName = "cubrid_source";
+        final String fileTargetName = "file_target";
+
+        // 2. 테스트용 db.conf 설정
+        Path resourceDbConf = testPaths.getResourceDir().resolve(dbConfFileName);
+        CubridDemodbContainer.patchDbConfHost(resourceDbConf, cubridSourceName);
+        CubridDemodbContainer.patchDbConfPort(resourceDbConf, cubridSourceName);
+        CubridDemodbContainer.patchDbConfDriver(resourceDbConf, cubridSourceName, Drivers.latest(CUBRID));
+        CubridDemodbContainer.patchDbConfOutput(resourceDbConf, fileTargetName, testPaths.artifactDir);
+
+        // 3. 설정 파일을 실제 작업 공간에 복사
+        copyConfToWorkspace(resourceDbConf);
+
+        // 4. 네트워크 및 JDBC 연결 사전 점검
+        Path finalDbConf = cmtConsoleDir.resolve(dbConfFileName);
+        String host = readProp(finalDbConf, cubridSourceName + ".host", "localhost");
+        int port = Integer.parseInt(readProp(finalDbConf, cubridSourceName + ".port", "33000"));
+
+        try (var s = new Socket(host, port)) {
+            // 연결 성공 시 별도 로그 불필요
+        } catch (Exception e) {
+            throw new AssertionError("[NET] TCP preflight check FAILED to " + host + ":" + port, e);
+        }
+
+        String dbname = readProp(finalDbConf, cubridSourceName + ".dbname", "demodb");
+        String user = readProp(finalDbConf, cubridSourceName + ".user", "public");
+        String pass = readProp(finalDbConf, cubridSourceName + ".password", "");
+        String charset = readProp(finalDbConf, cubridSourceName + ".charset", "utf-8");
+
+        Path driverJar = Drivers.latest(CUBRID);
+        JdbcPreflight.run(driverJar, new CubridJdbcUrlStrategy(), host, port, dbname, user, pass, charset);
+    }
+
+    private static String readProp(Path conf, String key, String def) throws IOException {
+        for (String line : Files.readAllLines(conf)) {
+            line = line.trim();
+            if (line.isEmpty() || line.startsWith("#")) continue;
+            int eq = line.indexOf('=');
+            if (eq <= 0) continue;
+            String k = line.substring(0, eq).trim();
+            if (k.equals(key)) {
+                return line.substring(eq + 1).trim();
+            }
+        }
+        return def;
     }
 }
