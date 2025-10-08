@@ -8,14 +8,18 @@ import java.sql.SQLException;
 import java.util.List;
 
 import com.cmt.e2e.support.TestLogHolder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public final class JdbcPreflight {
+    private static final Logger log = LoggerFactory.getLogger(JdbcPreflight.class);
+
     private JdbcPreflight() {}
 
     public static void run(Path driverJar, JdbcUrlStrategy strategy,
                            String host, int port, String dbname, String user, String pass, String charset) {
-        TestLogHolder.log("[JDBC-PREFLIGHT] jar=" + driverJar);
-        TestLogHolder.log("[JDBC-PREFLIGHT] base cfg host=%s, port=%d, dbname=%s, user=%s, pass=%s, charset=%s",
+        log.debug("[JDBC-PREFLIGHT] jar={}", driverJar);
+        log.debug("[JDBC-PREFLIGHT] base cfg host={}, port={}, dbname={}, user={}, pass={}, charset={}",
             host, port, dbname, user, mask(pass), charset);
 
         try (var cl = new URLClassLoader(new URL[]{driverJar.toUri().toURL()},
@@ -26,33 +30,33 @@ public final class JdbcPreflight {
             List<JdbcConnectionTry> tries = strategy.buildConnectionAttempts(host, port, dbname, user, pass, charset);
 
             for (JdbcConnectionTry t : tries) {
-                TestLogHolder.log("\n[JDBC-PREFLIGHT] TRY " + t.label());
-                TestLogHolder.log("[JDBC-PREFLIGHT] URL=" + t.url());
-                TestLogHolder.log("[JDBC-PREFLIGHT] PROPS=" + t.props());
+                log.debug("\n[JDBC-PREFLIGHT] TRY {}", t.label());
+                log.debug("[JDBC-PREFLIGHT] URL={}", t.url());
+                log.debug("[JDBC-PREFLIGHT] PROPS={}", t.props());
 
                 try (var conn = drv.connect(t.url(), t.props())) {
                     if (conn == null) throw new RuntimeException("Driver returned null connection");
-                    TestLogHolder.log("[JDBC-PREFLIGHT] OK %s :: %s %s", t.label(),
+                    log.debug("[JDBC-PREFLIGHT] OK {} :: {} {}", t.label(),
                         conn.getMetaData().getDatabaseProductName(),
                         conn.getMetaData().getDatabaseProductVersion());
                     return;
                 } catch (SQLException se) {
-                    TestLogHolder.log("[JDBC-PREFLIGHT] FAIL " + t.label());
-                    TestLogHolder.log("  SQLException: SQLState=%s, errorCode=%d, msg=%s", se.getSQLState(), se.getErrorCode(), se.getMessage());
-                    if (se.getCause() != null) TestLogHolder.log("  cause=" + se.getCause());
+                    log.debug("[JDBC-PREFLIGHT] FAIL {}", t.label());
+                    log.debug("  SQLException: SQLState={}, errorCode={}, msg={}", se.getSQLState(), se.getErrorCode(), se.getMessage());
+                    if (se.getCause() != null) TestLogHolder.log("  cause={}",  se.getCause());
                 } catch (Exception e) {
-                    TestLogHolder.log("[JDBC-PREFLIGHT] FAIL " + t.label());
-                    TestLogHolder.log("  CUBRIDException: " + e.getMessage());
+                    log.debug("[JDBC-PREFLIGHT] FAIL {}", t.label());
+                    log.debug("  CUBRIDException: {}", e.getMessage());
                     try {
                         var getErrorCode = e.getClass().getMethod("getErrorCode");
                         Object ec = getErrorCode.invoke(e);
-                        TestLogHolder.log("  getErrorCode=" + ec);
+                        log.debug("  getErrorCode={}", ec);
                     } catch (Throwable ignore) {}
                     if (e.getCause() != null) {
-                        TestLogHolder.log("  cause=" + e.getCause());
+                        log.debug("  cause={}", e.getCause());
                     }
                 } catch (Throwable th) {
-                    TestLogHolder.log("[JDBC-PREFLIGHT] FAIL " + t.label());
+                    log.debug("[JDBC-PREFLIGHT] FAIL {}", t.label());
                 }
             }
             throw new AssertionError("[JDBC-PREFLIGHT] All attempts failed (A~D)");

@@ -7,6 +7,8 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.TestInfo;
 import org.junit.jupiter.api.extension.RegisterExtension;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
@@ -23,6 +25,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  * 골든 파일 비교, 테스트별 작업 디렉터리 생성 등 공통 기능 제공
  */
 public abstract class CmtE2eTestBase {
+    private static final Logger log = LoggerFactory.getLogger(CmtE2eTestBase.class);
 
     @RegisterExtension
     final FailureLogDumperExtension failureLogDumper = new FailureLogDumperExtension();
@@ -61,7 +64,7 @@ public abstract class CmtE2eTestBase {
         // 1. 환경 변수 우선 확인
         String homePath = System.getenv("CMT_CONSOLE_HOME");
         if (homePath != null && !homePath.isBlank()) {
-            TestLogHolder.log("Using CMT_CONSOLE_HOME from environment variable: " + homePath);
+            log.debug("Using CMT_CONSOLE_HOME from environment variable: {}", homePath);
             return homePath;
         }
 
@@ -73,7 +76,7 @@ public abstract class CmtE2eTestBase {
                 props.load(input);
                 homePath = props.getProperty("cmt.console.home");
                 if (homePath != null && !homePath.isBlank()) {
-                    TestLogHolder.log("Using cmt.console.home form e2e-test.properties: " + homePath);
+                    log.debug("Using cmt.console.home form e2e-test.properties: {}", homePath);
                     return homePath;
                 }
             }

@@ -13,6 +13,8 @@ import com.cmt.e2e.support.jdbc.JdbcPreflight;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.net.InetAddress;
@@ -25,6 +27,7 @@ import static com.cmt.e2e.support.Drivers.DB.CUBRID;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class ScriptTest extends CmtE2eTestBase {
+    private static final Logger log = LoggerFactory.getLogger(ScriptTest.class);
 
     private static final String DB_CONF_FILENAME = "db.conf";
     private static final String SCRIPT_ANSWER_FILENAME = "script.answer";
@@ -66,7 +69,7 @@ public class ScriptTest extends CmtE2eTestBase {
         CubridDemodbContainer.patchDbConfDriver(resourceDbConf, CUBRID_SOURCE_NAME, Drivers.latest(CUBRID));
         CubridDemodbContainer.patchDbConfOutput(resourceDbConf, FILE_TARGET_NAME, testPaths.artifactDir);
 
-        TestLogHolder.log("[RUNNER] workDir=" + cmtConsoleWorkDir.getPath());
+        log.debug("[RUNNER] workDir={}", cmtConsoleWorkDir.getPath());
         workspaceFixtures.copyConfToWorkspace(resourceDbConf);
         Path finalDbConf = cmtConsoleWorkDir.toPath().resolve(DB_CONF_FILENAME);
 
@@ -77,13 +80,13 @@ public class ScriptTest extends CmtE2eTestBase {
         String pass = readProp(finalDbConf, CUBRID_SOURCE_NAME + ".password", "");
         String charset = readProp(finalDbConf, CUBRID_SOURCE_NAME + ".charset", "utf-8");
 
-        TestLogHolder.log("--- FINAL db.conf ---");
+        log.debug("--- FINAL db.conf ---");
         Files.lines(finalDbConf).forEach(TestLogHolder::log);
-        TestLogHolder.log("---------------------");
+        log.debug("---------------------");
 
-        TestLogHolder.log("[NET] host.docker.internal = " + InetAddress.getByName("host.docker.internal").getHostAddress());
+        log.debug("[NET] host.docker.internal = {}", InetAddress.getByName("host.docker.internal").getHostAddress());
         try (var s = new Socket(CubridDemodbContainer.getHost(), CubridDemodbContainer.getMappedBrokerPort())) {
-            TestLogHolder.log("[NET] TCP OK to demodb");
+            log.debug("[NET] TCP OK to demodb");
         } catch (Exception e) {
             throw new AssertionError("[NET] TCP FAIL to demodb: " +
                     CubridDemodbContainer.getHost() + ":" + CubridDemodbContainer.getMappedBrokerPort(), e);
@@ -94,11 +97,11 @@ public class ScriptTest extends CmtE2eTestBase {
     }
 
     private void verifyGeneratedScript(CommandResult result) throws IOException {
-        TestLogHolder.log("[RUN-RESULT] exit=%d, timedOut=%s%n%s%n",
+        log.debug("[RUN-RESULT] exit={}, timedOut={}, output={}",
                 result.exitCode(), result.timedOut(), result.output());
 
         String tempDirContents = Files.list(tempDir).map(Path::toString).collect(Collectors.joining("\n"));
-        TestLogHolder.log("[TEMP] tempDir contents:\n" + tempDirContents);
+        log.debug("[TEMP] tempDir contents: {}", tempDirContents);
 
         Path generatedScriptFile = testPaths.findGeneratedScriptFile(tempDir, GENERATED_SCRIPT_PREFIX)
                 .orElseThrow(() -> new AssertionError("Generated script file not found in " + tempDir));

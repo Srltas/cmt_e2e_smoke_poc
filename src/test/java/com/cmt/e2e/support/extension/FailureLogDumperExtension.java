@@ -1,5 +1,6 @@
 package com.cmt.e2e.support.extension;
 
+import com.cmt.e2e.support.InMemoryLogHolder;
 import com.cmt.e2e.support.TestLogHolder;
 import com.cmt.e2e.support.TestPaths;
 import org.junit.jupiter.api.extension.BeforeEachCallback;
@@ -24,7 +25,7 @@ public class FailureLogDumperExtension implements TestWatcher, BeforeEachCallbac
 
     @Override
     public void beforeEach(ExtensionContext context) {
-        TestLogHolder.clear();
+        InMemoryLogHolder.clear();
     }
 
     @Override
@@ -35,7 +36,7 @@ public class FailureLogDumperExtension implements TestWatcher, BeforeEachCallbac
             Files.createDirectories(artifactDir);
             Path logFilePath = artifactDir.resolve(LOG_FILE_NAME);
 
-            List<String> logs = TestLogHolder.getLogs();
+            List<String> logs = InMemoryLogHolder.getLogs();
 
             StringWriter sw = new StringWriter();
             PrintWriter pw = new PrintWriter(sw);
@@ -65,22 +66,22 @@ public class FailureLogDumperExtension implements TestWatcher, BeforeEachCallbac
             System.err.println("[ERROR] Failed to write diagnostic log file.");
             e.printStackTrace();
         } finally {
-            TestLogHolder.clear();
+            InMemoryLogHolder.clear();
         }
     }
 
     @Override
     public void testSuccessful(ExtensionContext context) {
-        TestLogHolder.clear();
+        InMemoryLogHolder.clear();
     }
 
     @Override
     public void testAborted(ExtensionContext context, Throwable cause) {
-        TestLogHolder.clear();
+        InMemoryLogHolder.clear();
     }
 
     @Override
     public void testDisabled(ExtensionContext context, java.util.Optional<String> reason) {
-        TestLogHolder.clear();
+        InMemoryLogHolder.clear();
     }
 }

@@ -18,6 +18,8 @@
         <assertj.version>3.27.4</assertj.version>
         <xmlunit.version>2.10.3</xmlunit.version>
         <testcontainers.version>1.21.3</testcontainers.version>
+        <slf4j.version>2.0.17</slf4j.version>
+        <logback.version>1.5.19</logback.version>
     </properties>
 
     <dependencyManagement>
@@ -63,6 +65,20 @@
         <dependency>
             <groupId>org.testcontainers</groupId>
             <artifactId>junit-jupiter</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>${slf4j.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <version>${logback.version}</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
