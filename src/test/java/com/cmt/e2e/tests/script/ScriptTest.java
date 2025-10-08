@@ -45,7 +45,7 @@ public class ScriptTest extends CmtE2eTestBase {
         dbConfig.patchWithContainer(cubridDemodb, CUBRID, testPaths.artifactDir);
 
         // 2. 최종 설정 파일을 작업 공간에 배치합니다.
-        workspaceFixtures.copyConfToWorkspace(dbConfig.getFinalConfPath());
+        workspaceFixtures.copyConfToWorkspace(dbConfig.getFinalConfPath(), DB_CONF_FILENAME);
 
         // 3. DB 서버와의 통신 환경을 사전 점검합니다.
         TestPreconditions.assertTcpConnection(dbConfig);

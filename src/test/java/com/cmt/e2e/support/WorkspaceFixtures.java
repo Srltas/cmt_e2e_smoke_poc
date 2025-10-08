@@ -35,13 +35,18 @@ public class WorkspaceFixtures {
         this.testInfo = testInfo;
     }
 
-    public void copyConfToWorkspace(Path resourceConfPath) throws IOException {
-        if (!Files.exists(resourceConfPath)) {
-            throw new IOException("Resource file not found: " + resourceConfPath);
+    public void copyConfToWorkspace(Path sourcePath) throws IOException {
+        copyConfToWorkspace(sourcePath, sourcePath.getFileName().toString());
+    }
+
+    public void copyConfToWorkspace(Path sourcePath, String destinationFilename) throws IOException {
+        if (!Files.exists(sourcePath)) {
+            throw new IOException("Resource file not found: " + sourcePath);
         }
-        Path destinationPath = cmtConsoleDir.resolve(resourceConfPath.getFileName());
-        log.debug("Copying config {} to {}", resourceConfPath, destinationPath);
-        Files.copy(resourceConfPath, destinationPath, StandardCopyOption.REPLACE_EXISTING);
+
+        Path destinationPath = cmtConsoleDir.resolve(destinationFilename);
+        log.debug("Copying config {} to {}", sourcePath, destinationPath);
+        Files.copy(sourcePath, destinationPath, StandardCopyOption.REPLACE_EXISTING);
     }
 
     public void cleanupConf() throws IOException {
