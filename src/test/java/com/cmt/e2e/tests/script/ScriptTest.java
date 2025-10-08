@@ -1,193 +1,111 @@
 package com.cmt.e2e.tests.script;
 
-import java.io.IOException;
-import java.net.InetAddress;
-import java.net.Socket;
-import java.net.URL;
-import java.net.URLClassLoader;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.sql.Driver;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Properties;
-
-import static com.cmt.e2e.support.Drivers.DB.CUBRID;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
 import com.cmt.e2e.assertion.strategies.XmlVerificationStrategy;
 import com.cmt.e2e.command.CommandResult;
 import com.cmt.e2e.command.impls.ScriptCommand;
 import com.cmt.e2e.support.CmtE2eTestBase;
 import com.cmt.e2e.support.Drivers;
+import com.cmt.e2e.support.TestLogHolder;
 import com.cmt.e2e.support.annotation.TestResources;
 import com.cmt.e2e.support.containers.CubridDemodbContainer;
+import com.cmt.e2e.support.jdbc.CubridJdbcUrlStrategy;
+import com.cmt.e2e.support.jdbc.JdbcPreflight;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
+import java.io.IOException;
+import java.net.InetAddress;
+import java.net.Socket;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.stream.Collectors;
+
+import static com.cmt.e2e.support.Drivers.DB.CUBRID;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 public class ScriptTest extends CmtE2eTestBase {
+
+    private static final String DB_CONF_FILENAME = "db.conf";
+    private static final String SCRIPT_ANSWER_FILENAME = "script.answer";
+    private static final String CUBRID_SOURCE_NAME = "cubrid_source";
+    private static final String FILE_TARGET_NAME = "file_target";
+    private static final String GENERATED_SCRIPT_PREFIX = "CUBRID_demodb_";
 
     @TempDir
     Path tempDir;
 
     @Test
     @TestResources("script")
-    void cubridDemodb() throws IOException, InterruptedException {
-        Path resourceDbConf = testPaths.getResourceDir().resolve("db.conf");
+    @DisplayName("온라인 CUBRID DB를 소스로 마이그레이션 스크립트를 생성한다")
+    void should_generateMigrationScript_when_sourceIsCUBRIDOnline() throws Exception {
+        // Arrange
+        prepareDatabaseAndConfiguration();
+
+        ScriptCommand command = ScriptCommand.builder()
+                .source(CUBRID_SOURCE_NAME)
+                .target(FILE_TARGET_NAME)
+                .output(tempDir.toString())
+                .build();
+
+        // Act
+        CommandResult result = commandRunner.run(command);
+
+        // Assert
+        assertEquals(0, result.exitCode(), "Script command should succeed");
+        verifyGeneratedScript(result);
+    }
+
+    private void prepareDatabaseAndConfiguration() throws IOException, InterruptedException {
+        Path resourceDbConf = testPaths.getResourceDir().resolve(DB_CONF_FILENAME);
 
         CubridDemodbContainer.waitUntilReady();
 
-        CubridDemodbContainer.patchDbConfHost(resourceDbConf, "cubrid_source");
-        CubridDemodbContainer.patchDbConfPort(resourceDbConf, "cubrid_source");
-        CubridDemodbContainer.patchDbConfDriver(resourceDbConf, "cubrid_source", Drivers.latest(CUBRID));
-        CubridDemodbContainer.patchDbConfOutput(resourceDbConf, "file_target", testPaths.artifactDir);
+        CubridDemodbContainer.patchDbConfHost(resourceDbConf, CUBRID_SOURCE_NAME);
+        CubridDemodbContainer.patchDbConfPort(resourceDbConf, CUBRID_SOURCE_NAME);
+        CubridDemodbContainer.patchDbConfDriver(resourceDbConf, CUBRID_SOURCE_NAME, Drivers.latest(CUBRID));
+        CubridDemodbContainer.patchDbConfOutput(resourceDbConf, FILE_TARGET_NAME, testPaths.artifactDir);
 
-        System.out.println("[RUNNER] workDir=" + cmtConsoleWorkDir.getPath());
+        TestLogHolder.log("[RUNNER] workDir=" + cmtConsoleWorkDir.getPath());
         workspaceFixtures.copyConfToWorkspace(resourceDbConf);
-        Path finalDbConf = cmtConsoleWorkDir.toPath().resolve("db.conf");
+        Path finalDbConf = cmtConsoleWorkDir.toPath().resolve(DB_CONF_FILENAME);
 
-        String host = readProp(finalDbConf, "cubrid_source.host", "localhost");
-        int port = Integer.parseInt(readProp(finalDbConf, "cubrid_source.port", "33000"));
-        String dbname = readProp(finalDbConf, "cubrid_source.dbname", "demodb");
-        String user = readProp(finalDbConf, "cubrid_source.user", "public");
-        String pass = readProp(finalDbConf, "cubrid_source.password", "");
-        String charset = readProp(finalDbConf, "cubrid_source.charset", "utf-8");
+        String host = readProp(finalDbConf, CUBRID_SOURCE_NAME + ".host", "localhost");
+        int port = Integer.parseInt(readProp(finalDbConf, CUBRID_SOURCE_NAME + ".port", "33000"));
+        String dbname = readProp(finalDbConf, CUBRID_SOURCE_NAME + ".dbname", "demodb");
+        String user = readProp(finalDbConf, CUBRID_SOURCE_NAME + ".user", "public");
+        String pass = readProp(finalDbConf, CUBRID_SOURCE_NAME + ".password", "");
+        String charset = readProp(finalDbConf, CUBRID_SOURCE_NAME + ".charset", "utf-8");
 
-        System.out.println("--- FINAL db.conf ---");
-        Files.lines(finalDbConf).forEach(System.out::println);
-        System.out.println("---------------------");
+        TestLogHolder.log("--- FINAL db.conf ---");
+        Files.lines(finalDbConf).forEach(TestLogHolder::log);
+        TestLogHolder.log("---------------------");
 
-        System.out.println("[NET] host.docker.internal = " + InetAddress.getByName("host.docker.internal").getHostAddress());
+        TestLogHolder.log("[NET] host.docker.internal = " + InetAddress.getByName("host.docker.internal").getHostAddress());
         try (var s = new Socket(CubridDemodbContainer.getHost(), CubridDemodbContainer.getMappedBrokerPort())) {
-            System.out.println("[NET] TCP OK to demodb");
+            TestLogHolder.log("[NET] TCP OK to demodb");
         } catch (Exception e) {
             throw new AssertionError("[NET] TCP FAIL to demodb: " +
-                CubridDemodbContainer.getHost() + ":" + CubridDemodbContainer.getMappedBrokerPort(), e);
+                    CubridDemodbContainer.getHost() + ":" + CubridDemodbContainer.getMappedBrokerPort(), e);
         }
 
         Path driverJar = Drivers.latest(CUBRID);
-        jdbcPreflight(driverJar, host, port, dbname, user, pass, charset);
+        JdbcPreflight.run(driverJar, new CubridJdbcUrlStrategy(), host, port, dbname, user, pass, charset);
+    }
 
-        ScriptCommand command = ScriptCommand.builder()
-            .source("cubrid_source")
-            .target("file_target")
-            .output(tempDir.toString())
-            .build();
+    private void verifyGeneratedScript(CommandResult result) throws IOException {
+        TestLogHolder.log("[RUN-RESULT] exit=%d, timedOut=%s%n%s%n",
+                result.exitCode(), result.timedOut(), result.output());
 
-        CommandResult result = commandRunner.run(command);
+        String tempDirContents = Files.list(tempDir).map(Path::toString).collect(Collectors.joining("\n"));
+        TestLogHolder.log("[TEMP] tempDir contents:\n" + tempDirContents);
 
-        System.out.printf("[RUN-RESULT] exit=%d, timedOut=%s%n%s%n",
-            result.exitCode(), result.timedOut(), result.output());
-        assertEquals(0, result.exitCode(), "script failed");
-        Files.list(tempDir).forEach(p -> System.out.println("[TEMP] " + p));
-
-        Path generatedScriptFile = testPaths.findGeneratedScriptFile(tempDir, "CUBRID_demodb_")
-            .orElseThrow(() -> new AssertionError("Generated script file not found in " + tempDir));
+        Path generatedScriptFile = testPaths.findGeneratedScriptFile(tempDir, GENERATED_SCRIPT_PREFIX)
+                .orElseThrow(() -> new AssertionError("Generated script file not found in " + tempDir));
 
         String actualXml = Files.readString(generatedScriptFile);
         CommandResult verificationResult = new CommandResult(actualXml, result.exitCode(), result.timedOut());
-        verifier.verifyWith(verificationResult, "script.answer", new XmlVerificationStrategy());
-    }
-
-    static final class JdbcTry {
-        final String label;
-        final String url;
-        final Properties props;
-
-        public JdbcTry(String label, String url, Properties props) {
-            this.label = label;
-            this.url = url;
-            this.props = props;
-        }
-    }
-
-    private static void jdbcPreflight(Path driverJar, String host, int port, String dbname, String userInConf, String passInConf, String charset) {
-        System.out.println("[JDBC-PREFLIGHT] jar=" + driverJar);
-        System.out.println("[JDBC-PREFLIGHT] base cfg host=" + host + ", port=" + port + ", dbname=" + dbname +
-            ", user=" + userInConf + ", pass=" + (passInConf == null ? "" : passInConf.replaceAll(".", "*")) +
-            ", charset=" + charset);
-
-        try (var cl = new URLClassLoader(new URL[]{driverJar.toUri().toURL()},
-            Thread.currentThread().getContextClassLoader())) {
-            Class<?> drvKlass = Class.forName("cubrid.jdbc.driver.CUBRIDDriver", true, cl);
-            Driver drv = (Driver) drvKlass.getDeclaredConstructor().newInstance();
-
-            String baseUrl = String.format("jdbc:cubrid:%s:%d:%s", host, port, dbname);
-
-            List<JdbcTry> tries = new ArrayList<>();
-
-            {
-                String url = baseUrl + ":::?charset=" + charset;
-                var p = new java.util.Properties();
-                p.setProperty("user", userInConf == null ? "" : userInConf);
-                p.setProperty("password", passInConf == null ? "" : passInConf);
-                tries.add(new JdbcTry("A/conf-props", url, p));
-            }
-
-            {
-                String url = baseUrl + ":::?charset=" + charset;
-                var p = new java.util.Properties();
-                p.setProperty("user", "dba");
-                p.setProperty("password", "");
-                tries.add(new JdbcTry("B/dba-props", url, p));
-            }
-
-            {
-                String url = String.format("jdbc:cubrid:%s:%d:%s:%s:%s:?charset=%s",
-                    host, port, dbname,
-                    userInConf == null ? "" : userInConf,
-                    passInConf == null ? "" : passInConf,
-                    charset);
-                tries.add(new JdbcTry("C/url-embed-user", url, new Properties()));
-            }
-
-            {
-                String url = baseUrl + ":::?charset=" + charset + "&loginTimeout=10&keepConnection=true";
-                var p = new Properties();
-                p.setProperty("user", userInConf == null ? "" : userInConf);
-                p.setProperty("password", passInConf == null ? "" : passInConf);
-                tries.add(new JdbcTry("D/conf+timeout", url, p));
-            }
-
-            for (JdbcTry t : tries) {
-                System.out.println("\n[JDBC-PREFLIGHT] TRY " + t.label);
-                System.out.println("[JDBC-PREFLIGHT] URL=" + t.url);
-                System.out.println("[JDBC-PREFLIGHT] PROPS=" + t.props);
-
-                try (var conn = drv.connect(t.url, t.props)) {
-                    if (conn == null) throw new RuntimeException("Driver returned null connection");
-                    System.out.println("[JDBC-PREFLIGHT] OK " + t.label + " :: " +
-                        conn.getMetaData().getDatabaseProductName() + " " +
-                        conn.getMetaData().getDatabaseProductVersion());
-                    return;
-                } catch (SQLException se) {
-                    System.out.println("[JDBC-PREFLIGHT] FAIL " + t.label);
-                    System.out.println("  SQLException: SQLState=" + se.getSQLState() + ", errorCode=" + se.getErrorCode()
-                        + ", msg=" + se.getMessage());
-                    if (se.getCause() != null) System.out.println("  cause=" + se.getCause());
-                } catch (Exception e) {
-                    System.out.println("[JDBC-PREFLIGHT] FAIL " + t.label);
-                    System.out.println("  CUBRIDException: " + e.getMessage());
-                    try {
-                        var getErrorCode = e.getClass().getMethod("getErrorCode");
-                        Object ec = getErrorCode.invoke(e);
-                        System.out.println("  getErrorCode=" + ec);
-                    } catch (Throwable ignore) {}
-                    if (e.getCause() != null) {
-                        System.out.println("  cause=" + e.getCause());
-                    }
-                } catch (Throwable th) {
-                    System.out.println("[JDBC-PREFLIGHT] FAIL " + t.label);
-                    th.printStackTrace(System.out);
-                }
-            }
-            throw new AssertionError("[JDBC-PREFLIGHT] All attempts failed (A~D)");
-        } catch (Throwable t) {
-            t.printStackTrace(System.out);
-            throw new AssertionError("[JDBC] direct connect FAILED  (jar=" + driverJar + ")", t);
-
-        }
+        verifier.verifyWith(verificationResult, SCRIPT_ANSWER_FILENAME, new XmlVerificationStrategy());
     }
 
     private static String readProp(Path conf, String key, String def) throws IOException {
@@ -202,9 +120,5 @@ public class ScriptTest extends CmtE2eTestBase {
             }
         }
         return def;
-    }
-
-    private static String mask(String s) {
-        return s == null ? "" : s.replaceAll(".", "*");
     }
 }
