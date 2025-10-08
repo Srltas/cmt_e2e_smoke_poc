@@ -10,13 +10,16 @@ public class CubridDemodbContainer implements DatabaseContainer {
     private static final DockerImageName IMAGE = DockerImageName.parse("cubriddmkim/cubrid_demodb:11.4");
     private static final int CUBRID_PORT = 33000;
 
-    public final GenericContainer<?> container =
-        new GenericContainer<>(IMAGE)
+    private final GenericContainer<?> container;
+
+    public CubridDemodbContainer() {
+        this.container = new GenericContainer<>(IMAGE)
             .withPrivilegedMode(true)
             .withEnv("CUBRID_COMPONENTS", "DEMO")
             .withExposedPorts(CUBRID_PORT)
             .waitingFor(Wait.forListeningPort())
             .withStartupTimeout(Duration.ofMinutes(2));
+    }
 
     @Override
     public String getHost() {

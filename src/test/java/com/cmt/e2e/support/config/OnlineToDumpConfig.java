@@ -6,11 +6,9 @@ import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import com.cmt.e2e.support.Drivers;
 import com.cmt.e2e.support.Drivers.DB;
-import com.cmt.e2e.support.containers.CubridDemodbContainer;
 import com.cmt.e2e.support.containers.DatabaseContainer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.testcontainers.containers.GenericContainer;
 
 public class OnlineToDumpConfig extends DbConfig {
     private static final Logger log = LoggerFactory.getLogger(OnlineToDumpConfig.class);
