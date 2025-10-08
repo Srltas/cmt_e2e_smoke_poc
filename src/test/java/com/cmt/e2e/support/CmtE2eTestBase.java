@@ -9,6 +9,7 @@ import org.junit.jupiter.api.TestInfo;
 import org.junit.jupiter.api.extension.RegisterExtension;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.testcontainers.junit.jupiter.Testcontainers;
 
 import java.io.File;
 import java.io.IOException;
@@ -24,6 +25,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  * 모든 E2E 테스트가 상속받는 기본 클래스
  * 골든 파일 비교, 테스트별 작업 디렉터리 생성 등 공통 기능 제공
  */
+@Testcontainers
 public abstract class CmtE2eTestBase {
     private static final Logger log = LoggerFactory.getLogger(CmtE2eTestBase.class);
 
