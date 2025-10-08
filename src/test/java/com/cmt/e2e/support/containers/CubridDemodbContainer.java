@@ -20,7 +20,7 @@ public class CubridDemodbContainer implements DatabaseContainer {
             .withPrivilegedMode(true)
             .withEnv("CUBRID_COMPONENTS", "DEMO")
             .withExposedPorts(CUBRID_PORT)
-            .waitingFor(Wait.forListeningPort())
+            .waitingFor(Wait.forLogMessage(".*cubrid server start: success.*", 1))
             .withStartupTimeout(Duration.ofMinutes(2));
     }
 
