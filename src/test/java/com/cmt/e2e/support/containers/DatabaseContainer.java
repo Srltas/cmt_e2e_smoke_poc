@@ -2,8 +2,9 @@ package com.cmt.e2e.support.containers;
 
 import com.cmt.e2e.support.Drivers.DB;
 import org.testcontainers.containers.GenericContainer;
+import org.testcontainers.lifecycle.Startable;
 
-public interface DatabaseContainer {
+public interface DatabaseContainer extends Startable {
 
     /**
      * 컨테이너가 실행 중인 호스트 이름을 반환

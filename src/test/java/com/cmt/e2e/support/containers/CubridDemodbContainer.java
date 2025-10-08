@@ -1,9 +1,12 @@
 package com.cmt.e2e.support.containers;
 
 import java.time.Duration;
+import java.util.Set;
+
 import com.cmt.e2e.support.Drivers.DB;
 import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.containers.wait.strategy.Wait;
+import org.testcontainers.lifecycle.Startable;
 import org.testcontainers.utility.DockerImageName;
 
 public class CubridDemodbContainer implements DatabaseContainer {
@@ -39,5 +42,20 @@ public class CubridDemodbContainer implements DatabaseContainer {
     @Override
     public GenericContainer<?> getContainer() {
         return container;
+    }
+
+    @Override
+    public void start() {
+        container.start();
+    }
+
+    @Override
+    public void stop() {
+        container.stop();
+    }
+
+    @Override
+    public Set<Startable> getDependencies() {
+        return container.getDependencies();
     }
 }
