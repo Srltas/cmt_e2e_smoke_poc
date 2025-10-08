@@ -1,5 +1,13 @@
 package com.cmt.e2e.support;
 
+import com.cmt.e2e.assertion.Verifier;
+import com.cmt.e2e.runner.CommandRunner;
+import com.cmt.e2e.support.extension.FailureLogDumperExtension;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.TestInfo;
+import org.junit.jupiter.api.extension.RegisterExtension;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -10,17 +18,14 @@ import java.util.Properties;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.cmt.e2e.assertion.Verifier;
-import com.cmt.e2e.runner.CommandRunner;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.TestInfo;
-
 /**
  * 모든 E2E 테스트가 상속받는 기본 클래스
  * 골든 파일 비교, 테스트별 작업 디렉터리 생성 등 공통 기능 제공
  */
 public abstract class CmtE2eTestBase {
+
+    @RegisterExtension
+    final FailureLogDumperExtension failureLogDumper = new FailureLogDumperExtension();
 
     protected TestPaths testPaths;
     protected Verifier verifier;
@@ -56,7 +61,7 @@ public abstract class CmtE2eTestBase {
         // 1. 환경 변수 우선 확인
         String homePath = System.getenv("CMT_CONSOLE_HOME");
         if (homePath != null && !homePath.isBlank()) {
-            System.out.println("Using CMT_CONSOLE_HOME from environment variable: " + homePath);
+            TestLogHolder.log("Using CMT_CONSOLE_HOME from environment variable: " + homePath);
             return homePath;
         }
 
@@ -68,7 +73,7 @@ public abstract class CmtE2eTestBase {
                 props.load(input);
                 homePath = props.getProperty("cmt.console.home");
                 if (homePath != null && !homePath.isBlank()) {
-                    System.out.println("Using cmt.console.home form e2e-test.properties: " + homePath);
+                    TestLogHolder.log("Using cmt.console.home form e2e-test.properties: " + homePath);
                     return homePath;
                 }
             }

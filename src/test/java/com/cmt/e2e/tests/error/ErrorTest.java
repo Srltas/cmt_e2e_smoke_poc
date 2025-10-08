@@ -1,7 +1,5 @@
 package com.cmt.e2e.tests.error;
 
-import java.io.IOException;
-
 import com.cmt.e2e.assertion.strategies.PlainTextVerificationStrategy;
 import com.cmt.e2e.command.Command;
 import com.cmt.e2e.command.CommandResult;
@@ -11,19 +9,23 @@ import com.cmt.e2e.support.annotation.TestResources;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import java.io.IOException;
+
 public class ErrorTest extends CmtE2eTestBase {
+
+    private static final String UNKNOWN_COMMAND_ANSWER_FILENAME = "unknownCommand.answer";
 
     @Test
     @TestResources("error/unknownCommand")
-    @DisplayName("유효하지 않는 명령어 입력")
-    void unknownCommand() throws IOException, InterruptedException {
-        // 1. Arrange
+    @DisplayName("알 수 없는 명령어를 입력하면 전체 도움말을 출력한다")
+    void should_printErrorMessage_when_commandIsUnknown() throws IOException, InterruptedException {
+        // Arrange
         Command unknownCommand = new RawCommand("./migration.sh", "unknown-command");
 
-        // 2. Act
+        // Act
         CommandResult result = commandRunner.run(unknownCommand);
 
-        // 3. Assert
-        verifier.verifyWith(result, "unknownCommand.answer", new PlainTextVerificationStrategy());
+        // Assert
+        verifier.verifyWith(result, UNKNOWN_COMMAND_ANSWER_FILENAME, new PlainTextVerificationStrategy());
     }
 }

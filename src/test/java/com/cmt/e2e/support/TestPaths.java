@@ -1,5 +1,8 @@
 package com.cmt.e2e.support;
 
+import com.cmt.e2e.support.annotation.TestResources;
+import org.junit.jupiter.api.TestInfo;
+
 import java.io.IOException;
 import java.lang.reflect.Method;
 import java.net.URISyntaxException;
@@ -10,19 +13,20 @@ import java.nio.file.Paths;
 import java.util.Optional;
 import java.util.stream.Stream;
 
-import com.cmt.e2e.support.annotation.TestResources;
-import org.junit.jupiter.api.TestInfo;
-
 public class TestPaths {
 
     public final Path resourceDir;
     public final Path artifactDir;
 
     public TestPaths(TestInfo testInfo) throws IOException {
-        String testClassName = testInfo.getTestClass().map(Class::getSimpleName).orElse("UnknownClass");
-        String testMethodName = testInfo.getTestMethod().map(Method::getName).orElse("UnknownMethod");
+        this(testInfo.getTestClass().orElseThrow(), testInfo.getTestMethod().orElseThrow());
+    }
 
-        Optional<TestResources> annotation = findTestResourcesAnnotation(testInfo);
+    public TestPaths(Class<?> testClass, Method testMethod) throws IOException {
+        String testClassName = testClass.getSimpleName();
+        String testMethodName = testMethod.getName();
+
+        Optional<TestResources> annotation = findTestResourcesAnnotation(testClass, testMethod);
         if (annotation.isEmpty()) {
             throw new IllegalStateException("Test class or method must have @TestResources annotation");
         }
@@ -48,10 +52,12 @@ public class TestPaths {
         }
     }
 
-    private Optional<TestResources> findTestResourcesAnnotation(TestInfo testInfo) {
-        return testInfo.getTestMethod()
-            .map(method -> method.getAnnotation(TestResources.class))
-            .or(() -> testInfo.getTestClass().map(clazz -> clazz.getAnnotation(TestResources.class)));
+    private Optional<TestResources> findTestResourcesAnnotation(Class<?> clazz, Method method) {
+        TestResources methodAnnotation = method.getAnnotation(TestResources.class);
+        if (methodAnnotation != null) {
+            return Optional.of(methodAnnotation);
+        }
+        return Optional.ofNullable(clazz.getAnnotation(TestResources.class));
     }
 
     private Path getPathFromResources(String path) {
