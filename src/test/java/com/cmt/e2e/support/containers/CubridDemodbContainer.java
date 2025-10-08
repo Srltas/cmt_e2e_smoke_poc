@@ -26,7 +26,7 @@ public class CubridDemodbContainer implements DatabaseContainer {
 
     @Override
     public String getHost() {
-        return container.getHost();
+        return "localhost";
     }
 
     @Override
