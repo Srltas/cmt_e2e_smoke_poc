@@ -10,6 +10,8 @@ import java.util.List;
 import java.util.regex.Pattern;
 
 import org.junit.jupiter.api.TestInstance;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.containers.wait.strategy.Wait;
 import org.testcontainers.junit.jupiter.Container;
@@ -19,6 +21,7 @@ import org.testcontainers.utility.DockerImageName;
 @Testcontainers
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class CubridDemodbContainer {
+    private static final Logger log = LoggerFactory.getLogger(CubridDemodbContainer.class);
 
     private static final DockerImageName IMAGE = DockerImageName.parse("cubriddmkim/cubrid_demodb:11.4");
 
@@ -113,6 +116,8 @@ public class CubridDemodbContainer {
         if (!Files.exists(conf)) {
             throw new FileNotFoundException("db.conf not found: " + conf);
         }
+        log.debug("Patching {} with: {}={}", conf.getFileName(), key, value);
+
         List<String> lines = Files.readAllLines(conf, StandardCharsets.UTF_8);
         boolean replaced = false;
         Pattern p = Pattern.compile("^\\s*" + Pattern.quote(key) + "\\s*=.*$");
@@ -128,6 +133,5 @@ public class CubridDemodbContainer {
             lines.add(key + "=" + value);
         }
         Files.write(conf, lines, StandardCharsets.UTF_8);
-        System.out.println("[DBCONF] " + key + "=" + value);
     }
 }

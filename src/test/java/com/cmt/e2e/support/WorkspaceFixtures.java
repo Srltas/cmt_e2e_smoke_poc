@@ -13,8 +13,11 @@ import java.util.Optional;
 
 import com.cmt.e2e.support.annotation.CubridDemodbMh;
 import org.junit.jupiter.api.TestInfo;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class WorkspaceFixtures {
+    private static final Logger log = LoggerFactory.getLogger(WorkspaceFixtures.class);
 
     public static final String CUBRID_DEMODB_MH = "1758883298370.mh";
 
@@ -37,6 +40,7 @@ public class WorkspaceFixtures {
             throw new IOException("Resource file not found: " + resourceConfPath);
         }
         Path destinationPath = cmtConsoleDir.resolve(resourceConfPath.getFileName());
+        log.debug("Copying config {} to {}", resourceConfPath, destinationPath);
         Files.copy(resourceConfPath, destinationPath, StandardCopyOption.REPLACE_EXISTING);
     }
 

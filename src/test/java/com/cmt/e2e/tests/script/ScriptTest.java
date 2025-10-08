@@ -60,52 +60,57 @@ public class ScriptTest extends CmtE2eTestBase {
     }
 
     private void prepareDatabaseAndConfiguration() throws IOException, InterruptedException {
-        Path resourceDbConf = testPaths.getResourceDir().resolve(DB_CONF_FILENAME);
-
+        // 1. DB 컨테이너 준비
         CubridDemodbContainer.waitUntilReady();
 
+        // 2. 테스트용 db.conf 설정
+        Path resourceDbConf = testPaths.getResourceDir().resolve(DB_CONF_FILENAME);
         CubridDemodbContainer.patchDbConfHost(resourceDbConf, CUBRID_SOURCE_NAME);
         CubridDemodbContainer.patchDbConfPort(resourceDbConf, CUBRID_SOURCE_NAME);
         CubridDemodbContainer.patchDbConfDriver(resourceDbConf, CUBRID_SOURCE_NAME, Drivers.latest(CUBRID));
         CubridDemodbContainer.patchDbConfOutput(resourceDbConf, FILE_TARGET_NAME, testPaths.artifactDir);
 
-        log.debug("[RUNNER] workDir={}", cmtConsoleWorkDir.getPath());
+        // 3. 설정 파일을 실제 작업 공간에 복사
         workspaceFixtures.copyConfToWorkspace(resourceDbConf);
-        Path finalDbConf = cmtConsoleWorkDir.toPath().resolve(DB_CONF_FILENAME);
 
+        // 4. 네트워크 및 JDBC 연결 사전 점검
+        Path finalDbConf = cmtConsoleWorkDir.toPath().resolve(DB_CONF_FILENAME);
         String host = readProp(finalDbConf, CUBRID_SOURCE_NAME + ".host", "localhost");
         int port = Integer.parseInt(readProp(finalDbConf, CUBRID_SOURCE_NAME + ".port", "33000"));
+
+        try (var s = new Socket(host, port)) {
+            // 연결 성공 시 별도 로그 불필요
+        } catch (Exception e) {
+            throw new AssertionError("[NET] TCP preflight check FAILED to " + host + ":" + port, e);
+        }
+
         String dbname = readProp(finalDbConf, CUBRID_SOURCE_NAME + ".dbname", "demodb");
         String user = readProp(finalDbConf, CUBRID_SOURCE_NAME + ".user", "public");
         String pass = readProp(finalDbConf, CUBRID_SOURCE_NAME + ".password", "");
         String charset = readProp(finalDbConf, CUBRID_SOURCE_NAME + ".charset", "utf-8");
-
-        log.debug("--- FINAL db.conf ---");
-        Files.lines(finalDbConf).forEach(TestLogHolder::log);
-        log.debug("---------------------");
-
-        log.debug("[NET] host.docker.internal = {}", InetAddress.getByName("host.docker.internal").getHostAddress());
-        try (var s = new Socket(CubridDemodbContainer.getHost(), CubridDemodbContainer.getMappedBrokerPort())) {
-            log.debug("[NET] TCP OK to demodb");
-        } catch (Exception e) {
-            throw new AssertionError("[NET] TCP FAIL to demodb: " +
-                    CubridDemodbContainer.getHost() + ":" + CubridDemodbContainer.getMappedBrokerPort(), e);
-        }
 
         Path driverJar = Drivers.latest(CUBRID);
         JdbcPreflight.run(driverJar, new CubridJdbcUrlStrategy(), host, port, dbname, user, pass, charset);
     }
 
     private void verifyGeneratedScript(CommandResult result) throws IOException {
-        log.debug("[RUN-RESULT] exit={}, timedOut={}, output={}",
-                result.exitCode(), result.timedOut(), result.output());
-
-        String tempDirContents = Files.list(tempDir).map(Path::toString).collect(Collectors.joining("\n"));
-        log.debug("[TEMP] tempDir contents: {}", tempDirContents);
-
+        // 1. 생성된 스크립트 파일을 찾습니다.
         Path generatedScriptFile = testPaths.findGeneratedScriptFile(tempDir, GENERATED_SCRIPT_PREFIX)
-                .orElseThrow(() -> new AssertionError("Generated script file not found in " + tempDir));
+            .orElseThrow(() -> {
+                // 파일을 못 찾았을 때만, 실패의 원인을 파악하기 위해 상세 디버그 로그를 남깁니다.
+                String tempDirContents;
+                try {
+                    tempDirContents = Files.list(tempDir).map(Path::toString).collect(Collectors.joining("\n"));
+                } catch (IOException e) {
+                    tempDirContents = "Could not list temp directory:" + e.getMessage();
+                }
+                log.error("Generated script file not found in {}. Current contents:\n {}", tempDir, tempDirContents);
+                return new AssertionError("Generated script file not found in " + tempDir);
+            });
 
+        log.debug("Found generated script file: {}", generatedScriptFile);
+
+        // 2. 파일 내용을 읽어와서 실제 검증을 수행합니다.
         String actualXml = Files.readString(generatedScriptFile);
         CommandResult verificationResult = new CommandResult(actualXml, result.exitCode(), result.timedOut());
         verifier.verifyWith(verificationResult, SCRIPT_ANSWER_FILENAME, new XmlVerificationStrategy());

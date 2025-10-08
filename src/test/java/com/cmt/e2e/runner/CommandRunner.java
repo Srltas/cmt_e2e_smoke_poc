@@ -13,8 +13,12 @@ import static java.util.concurrent.TimeUnit.SECONDS;
 import com.cmt.e2e.command.Command;
 import com.cmt.e2e.command.CommandResult;
 import com.cmt.e2e.command.impls.LogCommand;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class CommandRunner {
+    private static final Logger log = LoggerFactory.getLogger(CommandRunner.class);
+
     private static final int DEFAULT_TIMEOUT_SECONDS = 300;
     private final File workDir;
 
@@ -33,10 +37,9 @@ public class CommandRunner {
     public CommandResult run(Command command, long timeoutSeconds) throws IOException, InterruptedException {
         List<String> commandList = command.build();
 
-        System.out.println("[DEBUG] Executing command list: " + commandList);
-
-        System.out.println("[RUN] cwd=" + workDir.getAbsolutePath());
-        System.out.println("[RUN] cmd=" + String.join(" ", commandList));
+        log.debug("Executing command list: {}", commandList);
+        log.debug("CWD: {}", workDir.getAbsolutePath());
+        log.debug("CMD: {}", String.join(" ", commandList));
 
         ProcessBuilder processBuilder = new ProcessBuilder(commandList);
         processBuilder.directory(workDir);
@@ -52,12 +55,16 @@ public class CommandRunner {
         }
 
         boolean finishedInTime = process.waitFor(timeoutSeconds, SECONDS);
+        CommandResult result;
         if (!finishedInTime) {
             process.destroyForcibly();
-            return new CommandResult(output.toString(), -1, true);
+            result =  new CommandResult(output.toString(), -1, true);
+        } else {
+            result = new CommandResult(output.toString(), process.exitValue(), false);
         }
-
-        return new CommandResult(output.toString(), process.exitValue(), false);
+        log.debug("Command finished with exitCode: {}, timeOut: {}", result.exitCode(), result.timedOut());
+        log.debug("Command output: {}", result.output());
+        return result;
     }
 
     public CommandResult runInteractive(LogCommand command) throws Exception {
