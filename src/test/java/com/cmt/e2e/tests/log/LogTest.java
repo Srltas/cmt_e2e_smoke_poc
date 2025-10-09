@@ -1,16 +1,16 @@
 package com.cmt.e2e.tests.log;
 
-import com.cmt.e2e.assertion.strategies.PlainTextVerificationStrategy;
-import com.cmt.e2e.command.CommandResult;
-import com.cmt.e2e.command.impls.LogCommand;
-import com.cmt.e2e.support.CmtE2eTestBase;
-import com.cmt.e2e.support.annotation.CubridDemodbMh;
-import com.cmt.e2e.support.annotation.TestResources;
+import com.cmt.e2e.framework.assertion.strategies.PlainTextVerificationStrategy;
+import com.cmt.e2e.framework.command.CommandResult;
+import com.cmt.e2e.framework.command.impls.LogCommand;
+import com.cmt.e2e.framework.core.CmtE2eTestBase;
+import com.cmt.e2e.framework.junit.annotation.CubridDemodbMh;
+import com.cmt.e2e.framework.junit.annotation.TestResources;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import static com.cmt.e2e.support.WorkspaceFixtures.CUBRID_DEMODB_MH;
+import static com.cmt.e2e.framework.core.WorkspaceFixtures.CUBRID_DEMODB_MH;
 
 public class LogTest extends CmtE2eTestBase {
 

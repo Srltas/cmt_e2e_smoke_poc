@@ -1,13 +1,13 @@
 package com.cmt.e2e.tests.script;
 
-import com.cmt.e2e.command.CommandResult;
-import com.cmt.e2e.command.impls.ScriptCommand;
-import com.cmt.e2e.support.CmtE2eTestBase;
-import com.cmt.e2e.support.annotation.TestResources;
-import com.cmt.e2e.support.config.OnlineToDumpConfig;
-import com.cmt.e2e.support.containers.CubridDemodbContainer;
-import com.cmt.e2e.support.jdbc.CubridJdbcUrlStrategy;
-import com.cmt.e2e.support.precond.TestPreconditions;
+import com.cmt.e2e.framework.command.CommandResult;
+import com.cmt.e2e.framework.command.impls.ScriptCommand;
+import com.cmt.e2e.framework.core.CmtE2eTestBase;
+import com.cmt.e2e.framework.junit.annotation.TestResources;
+import com.cmt.e2e.framework.db.config.OnlineToDumpConfig;
+import com.cmt.e2e.framework.db.containers.CubridDemodbContainer;
+import com.cmt.e2e.framework.db.jdbc.CubridJdbcUrlStrategy;
+import com.cmt.e2e.framework.db.precond.TestPreconditions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
@@ -15,7 +15,7 @@ import org.testcontainers.junit.jupiter.Container;
 
 import java.nio.file.Path;
 
-import static com.cmt.e2e.support.Drivers.DB.CUBRID;
+import static com.cmt.e2e.framework.db.driver.Drivers.DB.CUBRID;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class ScriptTest extends CmtE2eTestBase {

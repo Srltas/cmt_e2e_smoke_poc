@@ -1,11 +1,11 @@
 package com.cmt.e2e.tests.help;
 
-import com.cmt.e2e.assertion.strategies.PlainTextVerificationStrategy;
-import com.cmt.e2e.command.Command;
-import com.cmt.e2e.command.CommandResult;
-import com.cmt.e2e.command.impls.HelpCommand;
-import com.cmt.e2e.support.CmtE2eTestBase;
-import com.cmt.e2e.support.annotation.TestResources;
+import com.cmt.e2e.framework.assertion.strategies.PlainTextVerificationStrategy;
+import com.cmt.e2e.framework.command.Command;
+import com.cmt.e2e.framework.command.CommandResult;
+import com.cmt.e2e.framework.command.impls.HelpCommand;
+import com.cmt.e2e.framework.core.CmtE2eTestBase;
+import com.cmt.e2e.framework.junit.annotation.TestResources;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
