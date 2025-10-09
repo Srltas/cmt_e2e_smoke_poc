@@ -1,7 +1,6 @@
 package com.cmt.e2e.support.extension;
 
 import com.cmt.e2e.support.InMemoryLogHolder;
-import com.cmt.e2e.support.TestLogHolder;
 import com.cmt.e2e.support.TestPaths;
 import org.junit.jupiter.api.extension.BeforeEachCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;

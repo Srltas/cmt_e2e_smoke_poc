@@ -7,7 +7,6 @@ import java.sql.Driver;
 import java.sql.SQLException;
 import java.util.List;
 
-import com.cmt.e2e.support.TestLogHolder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -43,7 +42,7 @@ public final class JdbcPreflight {
                 } catch (SQLException se) {
                     log.debug("[JDBC-PREFLIGHT] FAIL {}", t.label());
                     log.debug("  SQLException: SQLState={}, errorCode={}, msg={}", se.getSQLState(), se.getErrorCode(), se.getMessage());
-                    if (se.getCause() != null) TestLogHolder.log("  cause={}",  se.getCause());
+                    if (se.getCause() != null) log.debug("  cause", se.getCause());
                 } catch (Exception e) {
                     log.debug("[JDBC-PREFLIGHT] FAIL {}", t.label());
                     log.debug("  CUBRIDException: {}", e.getMessage());
