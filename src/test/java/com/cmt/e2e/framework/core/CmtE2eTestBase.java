@@ -22,8 +22,7 @@ import java.util.Properties;
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**
- * 모든 E2E 테스트가 상속받는 기본 클래스
- * 골든 파일 비교, 테스트별 작업 디렉터리 생성 등 공통 기능 제공
+ * The base class for all E2E tests.
  */
 @Testcontainers
 public abstract class CmtE2eTestBase {
@@ -38,39 +37,75 @@ public abstract class CmtE2eTestBase {
     protected CommandRunner commandRunner;
     protected WorkspaceFixtures workspaceFixtures;
 
+    /**
+     * Sets up the test environment before each test method.
+     * This method orchestrates the setup by calling purpose-specific helper methods.
+     */
     @BeforeEach
     void setup(TestInfo testInfo) throws IOException {
-        this.testPaths = new TestPaths(testInfo);
-        this.verifier = new Verifier(testPaths);
-
-        String cmtConsoleHome = resolveCmtConsoleHome();
-
-        assertThat(cmtConsoleHome).withFailMessage("CMT_CONSOLE_HOME 환경 변수가 설정되지 않았습니다.")
-            .isNotNull()
-            .isNotEmpty();
-        this.cmtConsoleWorkDir = new File(cmtConsoleHome);
-        this.commandRunner = new CommandRunner(this.cmtConsoleWorkDir);
-
-        this.workspaceFixtures = new WorkspaceFixtures(this.cmtConsoleWorkDir, testInfo);
-        // @CubridDemodbMh 어노테이션이 있다면 .mh 파일을 자동으로 준비
-        this.workspaceFixtures.setupCubridDemodbMh();
+        setupPathAndVerifier(testInfo);
+        setupCommandRunner();
+        setupTestFixtures(testInfo);
     }
 
+    /**
+     * Cleans up the test environment after each test method.
+     */
     @AfterEach
     void cleanup() throws IOException {
-        this.workspaceFixtures.cleanupWorkspace();
-        this.workspaceFixtures.cleanupConf();
+        if (workspaceFixtures != null) {
+            workspaceFixtures.cleanupWorkspace();
+            workspaceFixtures.cleanupConf();
+        }
     }
 
+    /**
+     * Initializes path-related and assertion-related components.
+     */
+    private void setupPathAndVerifier(TestInfo testInfo) throws IOException {
+        this.testPaths = new TestPaths(testInfo);
+        this.verifier = new Verifier(testPaths);
+        log.debug("TestPaths and Verifier initialized for test: {}", testInfo.getDisplayName());
+    }
+
+    /**
+     * Resolves the application's working directory and initializes the CommandRunner.
+     */
+    private void setupCommandRunner() throws IOException {
+        String cmtConsoleHome = resolveCmtConsoleHome();
+        assertThat(cmtConsoleHome)
+            .withFailMessage("The CMT_CONSOLE_HOME environment variable must be set.")
+            .isNotNull()
+            .isNotEmpty();
+
+        this.cmtConsoleWorkDir = new File(cmtConsoleHome);
+        this.commandRunner = new CommandRunner(cmtConsoleWorkDir);
+        log.debug("CommandRunner initialized with working directory: {}", cmtConsoleHome);
+    }
+
+    /**
+     * Initializes and prepares the workspace fixtures for the current test.
+     */
+    private void setupTestFixtures(TestInfo testInfo) throws IOException {
+        this.workspaceFixtures = new WorkspaceFixtures(cmtConsoleWorkDir, testInfo);
+        this.workspaceFixtures.setupCubridDemodbMh();
+        log.debug("WorkspaceFixtures initialized.");
+    }
+
+    /**
+     * Resolves the CMT console home directory path.
+     * It prioritizes the environment variable over the properties file.
+     *
+     * @return The resolved path to the CMT console home directory.
+     * @throws IOException if reading the properties file fails.
+     */
     private String resolveCmtConsoleHome() throws IOException {
-        // 1. 환경 변수 우선 확인
         String homePath = System.getenv("CMT_CONSOLE_HOME");
         if (homePath != null && !homePath.isBlank()) {
             log.debug("Using CMT_CONSOLE_HOME from environment variable: {}", homePath);
             return homePath;
         }
 
-        // 2. e2e-test.properties 파일 확인
         Path propsPath = Paths.get("e2e-test.properties");
         if (Files.exists(propsPath)) {
             Properties props = new Properties();
