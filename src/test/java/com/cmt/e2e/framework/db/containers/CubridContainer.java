@@ -9,19 +9,27 @@ import org.testcontainers.containers.wait.strategy.Wait;
 import org.testcontainers.lifecycle.Startable;
 import org.testcontainers.utility.DockerImageName;
 
-public class CubridDemodbContainer implements DatabaseContainer {
+public class CubridContainer implements DatabaseContainer {
     private static final DockerImageName IMAGE = DockerImageName.parse("cubriddmkim/cubrid_demodb:11.4");
     private static final int CUBRID_PORT = 33000;
 
     private final GenericContainer<?> container;
 
-    public CubridDemodbContainer() {
+    private CubridContainer(String components) {
         this.container = new GenericContainer<>(IMAGE)
             .withPrivilegedMode(true)
-            .withEnv("CUBRID_COMPONENTS", "DEMO")
+            .withEnv("CUBRID_COMPONENTS", components)
             .withExposedPorts(CUBRID_PORT)
             .waitingFor(Wait.forLogMessage(".*cubrid server start: success.*", 1))
             .withStartupTimeout(Duration.ofMinutes(2));
+    }
+
+    public static CubridContainer withDemodb() {
+        return new CubridContainer("DEMO");
+    }
+
+    public static CubridContainer withEmptyDb() {
+        return new CubridContainer("ALL");
     }
 
     @Override

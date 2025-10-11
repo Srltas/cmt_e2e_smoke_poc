@@ -5,7 +5,7 @@ import com.cmt.e2e.framework.command.impls.ScriptCommand;
 import com.cmt.e2e.framework.core.CmtE2eTestBase;
 import com.cmt.e2e.framework.junit.annotation.TestResources;
 import com.cmt.e2e.framework.db.config.OnlineToDumpConfig;
-import com.cmt.e2e.framework.db.containers.CubridDemodbContainer;
+import com.cmt.e2e.framework.db.containers.CubridContainer;
 import com.cmt.e2e.framework.db.jdbc.CubridJdbcUrlStrategy;
 import com.cmt.e2e.framework.db.precond.TestPreconditions;
 import org.junit.jupiter.api.DisplayName;
@@ -27,7 +27,7 @@ public class ScriptTest extends CmtE2eTestBase {
     private static final String GENERATED_SCRIPT_PREFIX = "CUBRID_demodb_";
 
     @Container
-    private final CubridDemodbContainer cubridDemodb = new CubridDemodbContainer();
+    private final CubridContainer cubridDemodb = CubridContainer.withDemodb();
 
     @TempDir
     Path tempDir;
