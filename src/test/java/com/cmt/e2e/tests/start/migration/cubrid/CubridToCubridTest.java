@@ -55,16 +55,16 @@ public class CubridToCubridTest extends CmtE2eTestBase {
 
         verifier.verifyWith(result, "expected_summary.answer", new MigrationSummaryVerificationStrategy());
 
-        DatabaseAsserts.assertRecordCount(targetDb, "cubdb", "athlete", 6677);
-        DatabaseAsserts.assertRecordCount(targetDb, "cubdb", "code", 6);
-        DatabaseAsserts.assertRecordCount(targetDb, "cubdb", "event", 422);
-        DatabaseAsserts.assertRecordCount(targetDb, "cubdb", "game", 8653);
-        DatabaseAsserts.assertRecordCount(targetDb, "cubdb", "history", 147);
-        DatabaseAsserts.assertRecordCount(targetDb, "cubdb", "nation", 215);
-        DatabaseAsserts.assertRecordCount(targetDb, "cubdb", "code", 6);
-        DatabaseAsserts.assertRecordCount(targetDb, "cubdb", "olympic", 25);
-        DatabaseAsserts.assertRecordCount(targetDb, "cubdb", "participant", 916);
-        DatabaseAsserts.assertRecordCount(targetDb, "cubdb", "record", 2000);
-        DatabaseAsserts.assertRecordCount(targetDb, "cubdb", "stadium", 141);
+        DatabaseAsserts.assertRecordCount(targetDb, "cubdb", "public", "athlete",  6677);
+        DatabaseAsserts.assertRecordCount(targetDb, "cubdb", "public", "code",  6);
+        DatabaseAsserts.assertRecordCount(targetDb, "cubdb", "public", "event",  422);
+        DatabaseAsserts.assertRecordCount(targetDb, "cubdb", "public", "game",  8653);
+        DatabaseAsserts.assertRecordCount(targetDb, "cubdb", "public", "history",  147);
+        DatabaseAsserts.assertRecordCount(targetDb, "cubdb", "public", "nation",  215);
+        DatabaseAsserts.assertRecordCount(targetDb, "cubdb", "public", "code",  6);
+        DatabaseAsserts.assertRecordCount(targetDb, "cubdb", "public", "olympic",  25);
+        DatabaseAsserts.assertRecordCount(targetDb, "cubdb", "public", "participant",  916);
+        DatabaseAsserts.assertRecordCount(targetDb, "cubdb", "public", "record",  2000);
+        DatabaseAsserts.assertRecordCount(targetDb, "cubdb", "public", "stadium",  141);
     }
 }

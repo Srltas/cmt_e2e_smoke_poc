@@ -10,9 +10,9 @@ public class DatabaseAsserts {
 
     private DatabaseAsserts() {}
 
-    public static void assertRecordCount(DatabaseContainer dbContainer, String dbName, String tableName, int expectedCount) {
-        String jdbcUrl = String.format("jdbc:cubrid:%s:%d:%s:dba::",
-            dbContainer.getHost(), dbContainer.getDatabasePort(), dbName);
+    public static void assertRecordCount(DatabaseContainer dbContainer, String dbName, String userName, String tableName, int expectedCount) {
+        String jdbcUrl = String.format("jdbc:cubrid:%s:%d:%s:%s::",
+            dbContainer.getHost(), dbContainer.getDatabasePort(), dbName, userName);
 
         try (Connection connection = DriverManager.getConnection(jdbcUrl);
              Statement statement = connection.createStatement();
