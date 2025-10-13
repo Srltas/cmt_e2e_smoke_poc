@@ -1,0 +1,255 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<migration name="script" version="11.1.0" wizardStartDateTime="202510122158">
+    <source db_type="CUBRID" online="yes" version="114">
+        <jdbc charset="UTF-8" driver="%%SOURCE_DRIVER%%" host="%%SOURCE_HOST%%" name="demodb" password="" port="%%SOURCE_PORT%%" timezone="" user="public" user_jdbc_url=""/>
+        <schemas>
+            <schema_info schema_name="PUBLIC" target_schema="PUBLIC"/>
+        </schemas>
+        <tables>
+            <table change_name="no" comment="" condition="" create="yes" exp_opt_col="yes" migrate_data="yes" name="athlete" owner="PUBLIC" partition="no" pk="yes" replace="yes" sql_after="" sql_before="" start_target_max="no" target="athlete" target_schema="PUBLIC">
+                <columns>
+                    <column comment="" data_handler="" name="code" rep_exp="" target="code" trim="no"/>
+                    <column comment="" data_handler="" name="name" rep_exp="" target="name" trim="no"/>
+                    <column comment="" data_handler="" name="gender" rep_exp="" target="gender" trim="no"/>
+                    <column comment="" data_handler="" name="nation_code" rep_exp="" target="nation_code" trim="no"/>
+                    <column comment="" data_handler="" name="event" rep_exp="" target="event" trim="no"/>
+                </columns>
+            </table>
+            <table change_name="no" comment="" condition="" create="yes" exp_opt_col="yes" migrate_data="yes" name="code" owner="PUBLIC" partition="no" pk="yes" replace="yes" sql_after="" sql_before="" start_target_max="no" target="code" target_schema="PUBLIC">
+                <columns>
+                    <column comment="" data_handler="" name="s_name" rep_exp="" target="s_name" trim="no"/>
+                    <column comment="" data_handler="" name="f_name" rep_exp="" target="f_name" trim="no"/>
+                </columns>
+            </table>
+            <table change_name="no" comment="" condition="" create="yes" exp_opt_col="yes" migrate_data="yes" name="event" owner="PUBLIC" partition="no" pk="yes" replace="yes" sql_after="" sql_before="" start_target_max="no" target="event" target_schema="PUBLIC">
+                <columns>
+                    <column comment="" data_handler="" name="code" rep_exp="" target="code" trim="no"/>
+                    <column comment="" data_handler="" name="sports" rep_exp="" target="sports" trim="no"/>
+                    <column comment="" data_handler="" name="name" rep_exp="" target="name" trim="no"/>
+                    <column comment="" data_handler="" name="gender" rep_exp="" target="gender" trim="no"/>
+                    <column comment="" data_handler="" name="players" rep_exp="" target="players" trim="no"/>
+                </columns>
+            </table>
+            <table change_name="no" comment="" condition="" create="yes" exp_opt_col="yes" migrate_data="yes" name="game" owner="PUBLIC" partition="no" pk="yes" replace="yes" sql_after="" sql_before="" start_target_max="no" target="game" target_schema="PUBLIC">
+                <columns>
+                    <column comment="" data_handler="" name="host_year" rep_exp="" target="host_year" trim="no"/>
+                    <column comment="" data_handler="" name="event_code" rep_exp="" target="event_code" trim="no"/>
+                    <column comment="" data_handler="" name="athlete_code" rep_exp="" target="athlete_code" trim="no"/>
+                    <column comment="" data_handler="" name="stadium_code" rep_exp="" target="stadium_code" trim="no"/>
+                    <column comment="" data_handler="" name="nation_code" rep_exp="" target="nation_code" trim="no"/>
+                    <column comment="" data_handler="" name="medal" rep_exp="" target="medal" trim="no"/>
+                    <column comment="" data_handler="" name="game_date" rep_exp="" target="game_date" trim="no"/>
+                </columns>
+                <constraints>
+                    <fk name="fk_game_athlete_code" target="fk_game_athlete_code"/>
+                    <fk name="fk_game_event_code" target="fk_game_event_code"/>
+                </constraints>
+            </table>
+            <table change_name="no" comment="" condition="" create="yes" exp_opt_col="yes" migrate_data="yes" name="history" owner="PUBLIC" partition="no" pk="yes" replace="yes" sql_after="" sql_before="" start_target_max="no" target="history" target_schema="PUBLIC">
+                <columns>
+                    <column comment="" data_handler="" name="event_code" rep_exp="" target="event_code" trim="no"/>
+                    <column comment="" data_handler="" name="athlete" rep_exp="" target="athlete" trim="no"/>
+                    <column comment="" data_handler="" name="host_year" rep_exp="" target="host_year" trim="no"/>
+                    <column comment="" data_handler="" name="score" rep_exp="" target="score" trim="no"/>
+                    <column comment="" data_handler="" name="unit" rep_exp="" target="unit" trim="no"/>
+                </columns>
+            </table>
+            <table change_name="no" comment="" condition="" create="yes" exp_opt_col="yes" migrate_data="yes" name="nation" owner="PUBLIC" partition="no" pk="yes" replace="yes" sql_after="" sql_before="" start_target_max="no" target="nation" target_schema="PUBLIC">
+                <columns>
+                    <column comment="" data_handler="" name="code" rep_exp="" target="code" trim="no"/>
+                    <column comment="" data_handler="" name="name" rep_exp="" target="name" trim="no"/>
+                    <column comment="" data_handler="" name="continent" rep_exp="" target="continent" trim="no"/>
+                    <column comment="" data_handler="" name="capital" rep_exp="" target="capital" trim="no"/>
+                </columns>
+            </table>
+            <table change_name="no" comment="" condition="" create="yes" exp_opt_col="yes" migrate_data="yes" name="olympic" owner="PUBLIC" partition="no" pk="yes" replace="yes" sql_after="" sql_before="" start_target_max="no" target="olympic" target_schema="PUBLIC">
+                <columns>
+                    <column comment="" data_handler="" name="host_year" rep_exp="" target="host_year" trim="no"/>
+                    <column comment="" data_handler="" name="host_nation" rep_exp="" target="host_nation" trim="no"/>
+                    <column comment="" data_handler="" name="host_city" rep_exp="" target="host_city" trim="no"/>
+                    <column comment="" data_handler="" name="opening_date" rep_exp="" target="opening_date" trim="no"/>
+                    <column comment="" data_handler="" name="closing_date" rep_exp="" target="closing_date" trim="no"/>
+                    <column comment="" data_handler="" name="mascot" rep_exp="" target="mascot" trim="no"/>
+                    <column comment="" data_handler="" name="slogan" rep_exp="" target="slogan" trim="no"/>
+                    <column comment="" data_handler="" name="introduction" rep_exp="" target="introduction" trim="no"/>
+                </columns>
+            </table>
+            <table change_name="no" comment="" condition="" create="yes" exp_opt_col="yes" migrate_data="yes" name="participant" owner="PUBLIC" partition="no" pk="yes" replace="yes" sql_after="" sql_before="" start_target_max="no" target="participant" target_schema="PUBLIC">
+                <columns>
+                    <column comment="" data_handler="" name="host_year" rep_exp="" target="host_year" trim="no"/>
+                    <column comment="" data_handler="" name="nation_code" rep_exp="" target="nation_code" trim="no"/>
+                    <column comment="" data_handler="" name="gold" rep_exp="" target="gold" trim="no"/>
+                    <column comment="" data_handler="" name="silver" rep_exp="" target="silver" trim="no"/>
+                    <column comment="" data_handler="" name="bronze" rep_exp="" target="bronze" trim="no"/>
+                </columns>
+                <constraints>
+                    <fk name="fk_participant_nation_code" target="fk_participant_nation_code"/>
+                    <fk name="fk_participant_host_year" target="fk_participant_host_year"/>
+                </constraints>
+            </table>
+            <table change_name="no" comment="" condition="" create="yes" exp_opt_col="yes" migrate_data="yes" name="record" owner="PUBLIC" partition="no" pk="yes" replace="yes" sql_after="" sql_before="" start_target_max="no" target="record" target_schema="PUBLIC">
+                <columns>
+                    <column comment="" data_handler="" name="host_year" rep_exp="" target="host_year" trim="no"/>
+                    <column comment="" data_handler="" name="event_code" rep_exp="" target="event_code" trim="no"/>
+                    <column comment="" data_handler="" name="athlete_code" rep_exp="" target="athlete_code" trim="no"/>
+                    <column comment="" data_handler="" name="medal" rep_exp="" target="medal" trim="no"/>
+                    <column comment="" data_handler="" name="score" rep_exp="" target="score" trim="no"/>
+                    <column comment="" data_handler="" name="unit" rep_exp="" target="unit" trim="no"/>
+                </columns>
+            </table>
+            <table change_name="no" comment="" condition="" create="yes" exp_opt_col="yes" migrate_data="yes" name="stadium" owner="PUBLIC" partition="no" pk="yes" replace="yes" sql_after="" sql_before="" start_target_max="no" target="stadium" target_schema="PUBLIC">
+                <columns>
+                    <column comment="" data_handler="" name="code" rep_exp="" target="code" trim="no"/>
+                    <column comment="" data_handler="" name="nation_code" rep_exp="" target="nation_code" trim="no"/>
+                    <column comment="" data_handler="" name="name" rep_exp="" target="name" trim="no"/>
+                    <column comment="" data_handler="" name="area" rep_exp="" target="area" trim="no"/>
+                    <column comment="" data_handler="" name="seats" rep_exp="" target="seats" trim="no"/>
+                    <column comment="" data_handler="" name="address" rep_exp="" target="address" trim="no"/>
+                </columns>
+            </table>
+        </tables>
+        <sequences>
+            <sequence auto_synchronize_start_value="yes" name="event_no" owner="PUBLIC" target="event_no"/>
+            <sequence auto_synchronize_start_value="yes" name="stadium_no" owner="PUBLIC" target="stadium_no"/>
+        </sequences>
+    </source>
+    <target db_type="cubrid" type="online" version="114">
+        <jdbc add_schema="yes" charset="UTF-8" create_constraints_before_data="no" driver="%%TARGET_DRIVER%%" host="%%TARGET_HOST%%" name="cubdb" password="" port="%%TARGET_PORT%%" timezone="" user="public" user_jdbc_url="" write_error_records="no"/>
+        <schemas/>
+        <tables>
+            <table comment="" name="athlete" owner="PUBLIC" reuse_oid="yes" source_owner="PUBLIC">
+                <columns>
+                    <column auto_increment="yes" base_type="int" comment="" increment="1" name="code" null="no" shared="no" start="16694" type="int" unique="yes"/>
+                    <column auto_increment="no" base_type="varchar" comment="" increment="1" name="name" null="no" shared="no" start="0" type="varchar(40)" unique="no"/>
+                    <column auto_increment="no" base_type="char" comment="" increment="1" name="gender" null="yes" shared="no" start="0" type="char(1)" unique="no"/>
+                    <column auto_increment="no" base_type="char" comment="" increment="1" name="nation_code" null="yes" shared="no" start="0" type="char(3)" unique="no"/>
+                    <column auto_increment="no" base_type="varchar" comment="" increment="1" name="event" null="yes" shared="no" start="0" type="varchar(30)" unique="no"/>
+                </columns>
+                <constraints>
+                    <pk fields="code"/>
+                </constraints>
+            </table>
+            <table comment="" name="code" owner="PUBLIC" reuse_oid="yes" source_owner="PUBLIC">
+                <columns>
+                    <column auto_increment="no" base_type="char" comment="" increment="1" name="s_name" null="no" shared="no" start="0" type="char(1)" unique="yes"/>
+                    <column auto_increment="no" base_type="varchar" comment="" increment="1" name="f_name" null="yes" shared="no" start="0" type="varchar(6)" unique="no"/>
+                </columns>
+                <constraints>
+                    <pk fields="s_name"/>
+                </constraints>
+            </table>
+            <table comment="" name="event" owner="PUBLIC" reuse_oid="yes" source_owner="PUBLIC">
+                <columns>
+                    <column auto_increment="no" base_type="int" comment="" increment="1" name="code" null="no" shared="no" start="0" type="int" unique="yes"/>
+                    <column auto_increment="no" base_type="varchar" comment="" increment="1" name="sports" null="yes" shared="no" start="0" type="varchar(50)" unique="no"/>
+                    <column auto_increment="no" base_type="varchar" comment="" increment="1" name="name" null="yes" shared="no" start="0" type="varchar(50)" unique="no"/>
+                    <column auto_increment="no" base_type="char" comment="" increment="1" name="gender" null="yes" shared="no" start="0" type="char(1)" unique="no"/>
+                    <column auto_increment="no" base_type="int" comment="" increment="1" name="players" null="yes" shared="no" start="0" type="int" unique="no"/>
+                </columns>
+                <constraints>
+                    <pk fields="code"/>
+                </constraints>
+            </table>
+            <table comment="" name="game" owner="PUBLIC" reuse_oid="yes" source_owner="PUBLIC">
+                <columns>
+                    <column auto_increment="no" base_type="int" comment="" increment="1" name="host_year" null="no" shared="no" start="0" type="int" unique="yes"/>
+                    <column auto_increment="no" base_type="int" comment="" increment="1" name="event_code" null="no" shared="no" start="0" type="int" unique="no"/>
+                    <column auto_increment="no" base_type="int" comment="" increment="1" name="athlete_code" null="no" shared="no" start="0" type="int" unique="no"/>
+                    <column auto_increment="no" base_type="int" comment="" increment="1" name="stadium_code" null="no" shared="no" start="0" type="int" unique="no"/>
+                    <column auto_increment="no" base_type="char" comment="" increment="1" name="nation_code" null="yes" shared="no" start="0" type="char(3)" unique="no"/>
+                    <column auto_increment="no" base_type="char" comment="" increment="1" name="medal" null="yes" shared="no" start="0" type="char(1)" unique="no"/>
+                    <column auto_increment="no" base_type="date" comment="" increment="1" name="game_date" null="yes" shared="no" start="0" type="date" unique="no"/>
+                </columns>
+                <constraints>
+                    <pk fields="host_year,event_code,athlete_code"/>
+                    <fk fields="athlete_code" name="fk_game_athlete_code" on_delete="RESTRICT" on_update="RESTRICT" ref_fields="code" ref_table="athlete"/>
+                    <fk fields="event_code" name="fk_game_event_code" on_delete="RESTRICT" on_update="RESTRICT" ref_fields="code" ref_table="event"/>
+                </constraints>
+            </table>
+            <table comment="" name="history" owner="PUBLIC" reuse_oid="yes" source_owner="PUBLIC">
+                <columns>
+                    <column auto_increment="no" base_type="int" comment="" increment="1" name="event_code" null="no" shared="no" start="0" type="int" unique="yes"/>
+                    <column auto_increment="no" base_type="varchar" comment="" increment="1" name="athlete" null="no" shared="no" start="0" type="varchar(40)" unique="no"/>
+                    <column auto_increment="no" base_type="int" comment="" increment="1" name="host_year" null="yes" shared="no" start="0" type="int" unique="no"/>
+                    <column auto_increment="no" base_type="varchar" comment="" increment="1" name="score" null="yes" shared="no" start="0" type="varchar(10)" unique="no"/>
+                    <column auto_increment="no" base_type="varchar" comment="" increment="1" name="unit" null="yes" shared="no" start="0" type="varchar(5)" unique="no"/>
+                </columns>
+                <constraints>
+                    <pk fields="event_code,athlete"/>
+                </constraints>
+            </table>
+            <table comment="" name="nation" owner="PUBLIC" reuse_oid="yes" source_owner="PUBLIC">
+                <columns>
+                    <column auto_increment="no" base_type="char" comment="" increment="1" name="code" null="no" shared="no" start="0" type="char(3)" unique="yes"/>
+                    <column auto_increment="no" base_type="varchar" comment="" increment="1" name="name" null="no" shared="no" start="0" type="varchar(40)" unique="no"/>
+                    <column auto_increment="no" base_type="varchar" comment="" increment="1" name="continent" null="yes" shared="no" start="0" type="varchar(10)" unique="no"/>
+                    <column auto_increment="no" base_type="varchar" comment="" increment="1" name="capital" null="yes" shared="no" start="0" type="varchar(30)" unique="no"/>
+                </columns>
+                <constraints>
+                    <pk fields="code"/>
+                </constraints>
+            </table>
+            <table comment="" name="olympic" owner="PUBLIC" reuse_oid="yes" source_owner="PUBLIC">
+                <columns>
+                    <column auto_increment="no" base_type="int" comment="" increment="1" name="host_year" null="no" shared="no" start="0" type="int" unique="yes"/>
+                    <column auto_increment="no" base_type="varchar" comment="" increment="1" name="host_nation" null="no" shared="no" start="0" type="varchar(40)" unique="no"/>
+                    <column auto_increment="no" base_type="varchar" comment="" increment="1" name="host_city" null="no" shared="no" start="0" type="varchar(20)" unique="no"/>
+                    <column auto_increment="no" base_type="date" comment="" increment="1" name="opening_date" null="no" shared="no" start="0" type="date" unique="no"/>
+                    <column auto_increment="no" base_type="date" comment="" increment="1" name="closing_date" null="no" shared="no" start="0" type="date" unique="no"/>
+                    <column auto_increment="no" base_type="varchar" comment="" increment="1" name="mascot" null="yes" shared="no" start="0" type="varchar(20)" unique="no"/>
+                    <column auto_increment="no" base_type="varchar" comment="" increment="1" name="slogan" null="yes" shared="no" start="0" type="varchar(40)" unique="no"/>
+                    <column auto_increment="no" base_type="varchar" comment="" increment="1" name="introduction" null="yes" shared="no" start="0" type="varchar(1500)" unique="no"/>
+                </columns>
+                <constraints>
+                    <pk fields="host_year"/>
+                </constraints>
+            </table>
+            <table comment="" name="participant" owner="PUBLIC" reuse_oid="yes" source_owner="PUBLIC">
+                <columns>
+                    <column auto_increment="no" base_type="int" comment="" increment="1" name="host_year" null="no" shared="no" start="0" type="int" unique="yes"/>
+                    <column auto_increment="no" base_type="char" comment="" increment="1" name="nation_code" null="no" shared="no" start="0" type="char(3)" unique="no"/>
+                    <column auto_increment="no" base_type="int" comment="" default="0" expression_default="no" increment="1" name="gold" null="yes" shared="no" start="0" type="int" unique="no"/>
+                    <column auto_increment="no" base_type="int" comment="" default="0" expression_default="no" increment="1" name="silver" null="yes" shared="no" start="0" type="int" unique="no"/>
+                    <column auto_increment="no" base_type="int" comment="" default="0" expression_default="no" increment="1" name="bronze" null="yes" shared="no" start="0" type="int" unique="no"/>
+                </columns>
+                <constraints>
+                    <pk fields="host_year,nation_code"/>
+                    <fk fields="nation_code" name="fk_participant_nation_code" on_delete="RESTRICT" on_update="RESTRICT" ref_fields="code" ref_table="nation"/>
+                    <fk fields="host_year" name="fk_participant_host_year" on_delete="RESTRICT" on_update="RESTRICT" ref_fields="host_year" ref_table="olympic"/>
+                </constraints>
+            </table>
+            <table comment="" name="record" owner="PUBLIC" reuse_oid="yes" source_owner="PUBLIC">
+                <columns>
+                    <column auto_increment="no" base_type="int" comment="" increment="1" name="host_year" null="no" shared="no" start="0" type="int" unique="yes"/>
+                    <column auto_increment="no" base_type="int" comment="" increment="1" name="event_code" null="no" shared="no" start="0" type="int" unique="no"/>
+                    <column auto_increment="no" base_type="int" comment="" increment="1" name="athlete_code" null="no" shared="no" start="0" type="int" unique="no"/>
+                    <column auto_increment="no" base_type="char" comment="" increment="1" name="medal" null="no" shared="no" start="0" type="char(1)" unique="no"/>
+                    <column auto_increment="no" base_type="varchar" comment="" increment="1" name="score" null="yes" shared="no" start="0" type="varchar(20)" unique="no"/>
+                    <column auto_increment="no" base_type="varchar" comment="" increment="1" name="unit" null="yes" shared="no" start="0" type="varchar(5)" unique="no"/>
+                </columns>
+                <constraints>
+                    <pk fields="host_year,event_code,athlete_code,medal"/>
+                </constraints>
+            </table>
+            <table comment="" name="stadium" owner="PUBLIC" reuse_oid="yes" source_owner="PUBLIC">
+                <columns>
+                    <column auto_increment="no" base_type="int" comment="" increment="1" name="code" null="no" shared="no" start="0" type="int" unique="yes"/>
+                    <column auto_increment="no" base_type="char" comment="" increment="1" name="nation_code" null="no" shared="no" start="0" type="char(3)" unique="no"/>
+                    <column auto_increment="no" base_type="varchar" comment="" increment="1" name="name" null="no" shared="no" start="0" type="varchar(50)" unique="no"/>
+                    <column auto_increment="no" base_type="numeric" comment="" increment="1" name="area" null="yes" shared="no" start="0" type="numeric(10,2)" unique="no"/>
+                    <column auto_increment="no" base_type="int" comment="" increment="1" name="seats" null="yes" shared="no" start="0" type="int" unique="no"/>
+                    <column auto_increment="no" base_type="varchar" comment="" increment="1" name="address" null="yes" shared="no" start="0" type="varchar(100)" unique="no"/>
+                </columns>
+                <constraints>
+                    <pk fields="code"/>
+                </constraints>
+            </table>
+        </tables>
+        <sequences>
+            <sequence cache="no" cache_size="0" cycle="no" increment="1" max="0" min="0" name="event_no" no_max="yes" no_min="yes" owner="PUBLIC" source_owner="PUBLIC" start="20422"/>
+            <sequence cache="no" cache_size="0" cycle="no" increment="1" max="0" min="0" name="stadium_no" no_max="yes" no_min="yes" owner="PUBLIC" source_owner="PUBLIC" start="30141"/>
+        </sequences>
+        <views/>
+    </target>
+    <params commit_count="1000" export_thread="4" implicit_estimate_progress="no" import_thread="3" page_fetch_count="1000" update_statistics="yes"/>
+</migration>
