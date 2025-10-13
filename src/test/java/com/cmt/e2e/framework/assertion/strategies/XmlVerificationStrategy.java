@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
+import com.cmt.e2e.framework.assertion.VerificationFailedException;
 import com.cmt.e2e.framework.command.CommandResult;
 import com.cmt.e2e.framework.util.XmlUtil;
 
@@ -14,7 +15,11 @@ public class XmlVerificationStrategy implements VerificationStrategy {
         String expectedXml = Files.readString(expectedAnswerPath);
         String actualXml = findActualXml(actualResult);
 
-        XmlUtil.assertSimilarStandard(actualXml, expectedXml);
+        try {
+            XmlUtil.assertSimilarStandard(actualXml, expectedXml);
+        } catch (AssertionError e) {
+            throw new VerificationFailedException(e.getMessage(), actualXml, expectedXml, e);
+        }
     }
 
     private String findActualXml(CommandResult actualResult) {

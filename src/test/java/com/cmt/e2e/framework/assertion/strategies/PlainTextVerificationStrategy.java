@@ -3,6 +3,8 @@ package com.cmt.e2e.framework.assertion.strategies;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+
+import com.cmt.e2e.framework.assertion.VerificationFailedException;
 import com.cmt.e2e.framework.command.CommandResult;
 
 public class PlainTextVerificationStrategy implements VerificationStrategy {
@@ -13,7 +15,7 @@ public class PlainTextVerificationStrategy implements VerificationStrategy {
         String expectedText = trimLines(Files.readString(expectedAnswerPath));
 
         if (!actualText.equals(expectedText)) {
-            throw new AssertionError("Text content does not match.");
+            throw new VerificationFailedException("Text content does not match.", actualText, expectedText);
         }
     }
 

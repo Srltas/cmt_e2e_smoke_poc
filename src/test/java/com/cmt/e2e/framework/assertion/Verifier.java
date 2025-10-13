@@ -38,9 +38,8 @@ public class Verifier {
 
         try {
             strategy.verify(result, expectedAnswerPath);
-        } catch (AssertionError e) {
-            String expectedContent = Files.readString(expectedAnswerPath);
-            writeFailureArtifacts(result.output(), expectedContent, e);
+        } catch (VerificationFailedException e) {
+            writeFailureArtifacts(e.getActual(), e.getExpected(), e);
             throw new AssertionError("Verification failed. See diff artifact for details: " +
                 testPaths.artifactDir.resolve("diff.patch").toUri(), e);
         }

@@ -4,20 +4,18 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
+import com.cmt.e2e.framework.assertion.VerificationFailedException;
 import com.cmt.e2e.framework.command.CommandResult;
 
 public class MigrationSummaryVerificationStrategy implements VerificationStrategy{
 
     @Override
-    public void verify(CommandResult actualResult, Path expectedAnswerPath) throws IOException, AssertionError {
-        String sanitizedActual = sanitize(actualResult.output());
-        String expected = Files.readString(expectedAnswerPath);
+    public void verify(CommandResult result, Path expectedAnswerPath) throws IOException, AssertionError {
+        String actualResult = trimLines(sanitize(result.output()));
+        String expectedResult = trimLines(Files.readString(expectedAnswerPath));
 
-        String trimmedSanitizedActual = trimLines(sanitizedActual);
-        String trimmedExpected = trimLines(expected);
-
-        if (!trimmedSanitizedActual.equals(trimmedExpected)) {
-            throw new AssertionError("Sanitized text content does not math.");
+        if (!actualResult.equals(expectedResult)) {
+            throw new VerificationFailedException("Sanitized text content does not math.", actualResult, expectedResult);
         }
     }
 
