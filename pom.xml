@@ -20,6 +20,7 @@
         <testcontainers.version>1.21.3</testcontainers.version>
         <slf4j.version>2.0.17</slf4j.version>
         <logback.version>1.5.19</logback.version>
+        <cubrid-jdbc.version>11.3.2.0053</cubrid-jdbc.version>
     </properties>
 
     <dependencyManagement>
@@ -80,6 +81,12 @@
             <artifactId>logback-classic</artifactId>
             <version>${logback.version}</version>
             <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.cubrid</groupId>
+            <artifactId>cubrid-jdbc</artifactId>
+            <version>${cubrid-jdbc.version}</version>
         </dependency>
     </dependencies>
 
