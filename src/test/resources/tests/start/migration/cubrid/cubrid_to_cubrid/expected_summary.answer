@@ -2,8 +2,6 @@ Thank you for using CUBRID Migration Toolkit(CMT) Console.
 Reading <[SCRIPT_PATH]>
 Reading source database schema ...
 Migration started at [TIMESTAMP]
-Record Migration Progress: 100% [19202 / 19202 records]
-
 -------------------------------------------------------------
 Migration Report summary:
     Time used: [DURATION]

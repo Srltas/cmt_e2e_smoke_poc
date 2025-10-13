@@ -3,6 +3,10 @@ package com.cmt.e2e.framework.assertion.strategies;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import com.cmt.e2e.framework.assertion.VerificationFailedException;
 import com.cmt.e2e.framework.command.CommandResult;
@@ -21,22 +25,36 @@ public class MigrationSummaryVerificationStrategy implements VerificationStrateg
 
     private String sanitize(String output) {
         if (output == null) return "";
-        return output
-            .replaceAll("Migration started at .*", "Migration started at [TIMESTAMP]")
-            .replaceAll("Time used: .*", "Time used: [DURATION]")
-            .replaceAll("Reading <.*>", "Reading <[SCRIPT_PATH]>")
-            .replaceAll("(?m)^Record Migration Progress: (?!100%).*\\R?", "")
-            .replaceAll("(?m)^PUBLIC\\..*\\R?", "");
+
+        String normalized = output.replace("\r\n", "\n").replace("\r", "\n");
+
+        List<String> keptLines = new ArrayList<>();
+        boolean inProgressSection = false;
+
+        for (String line : normalized.split("\n")) {
+            if (!inProgressSection) {
+                keptLines.add(line);
+                if (line.contains("Migration started at")) {
+                    inProgressSection = true;
+                }
+            } else {
+                if (line.startsWith("-------------------------------------------------------------")) {
+                    keptLines.add(line);
+                    inProgressSection = false;
+                }
+            }
+        }
+
+        return String.join("\n", keptLines)
+            .replaceAll("(?m)^Migration started at .*", "Migration started at [TIMESTAMP]")
+            .replaceAll("(?m)^Reading <.*>", "Reading <[SCRIPT_PATH]>")
+            .replaceAll("(?m)^\\s+Time used: .*", "    Time used: [DURATION]");
     }
 
     private String trimLines(String input) {
         if (input == null) return "";
-        String[] lines = input.split("\\R");
-        StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < lines.length; i++) {
-            if (i > 0) sb.append('\n');
-            sb.append(lines[i].trim());
-        }
-        return sb.toString();
+        return Arrays.stream(input.split("\\R"))
+            .map(String::trim)
+            .collect(Collectors.joining("\n"));
     }
 }
